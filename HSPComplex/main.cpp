@@ -20,6 +20,8 @@ struct complex
 };
 static complex conv;
 static char custom[64];
+static short *aftertype;
+static int mytype;
 
 static PDAT *HspVarComplex_GetPtr(PVal *pval)
 {
@@ -134,3 +136,57 @@ static void HspVarComplex_Alloc( PVal *pval, const PVal *pval2 )
 }
 
 
+// Size
+static int HspVarComplex_GetSize( const PDAT *pval )
+{
+	return sizeof(complex);
+}
+
+// Set
+static void HspVarComplex_Set( PVal *pval, PDAT *pdat, const void *in )
+{
+	*((complex *)pdat) = *((complex *)(in));
+}
+
+#define A (((complex *)pval)->Real)
+#define B (((complex *)pval)->Imaginary)
+#define C (((complex *)val)->Real)
+#define D (((complex *)val)->Imaginary)
+
+// Add
+static void HspVarComplex_AddI( PDAT *pval, const void *val )
+{
+	// (a + bi) + (c + di) = (a + c) + (b + d)i
+	A += C;
+	B += D;
+	*aftertype = mytype;
+}
+
+// Sub
+static void HspVarComplex_SubI( PDAT *pval, const void *val )
+{
+	// (a + bi) - (c + di) = (a - c) + (b - d)i
+	A -= C;
+	B -= D;
+	*aftertype = mytype;
+}
+
+// Mul
+static void HspVarComplex_MulI( PDAT *pval, const void *val )
+{
+	// (a + bi) (c + di) = (ac - bd) + (bc + ad)i
+	A = A * C - B * D;
+	B = B * C + A * D;
+	*aftertype = mytype;
+}
+
+// Div
+static void HspVarComplex_DivI( PDAT *pval, const void *val )
+{
+	// (a + bi) / (c + di) = (ac + bd) / (c^2 + d^2) + (bc - ad)i / (c^2 + d^2)
+	complex p = *((complex *)(val));
+	if ((p.Real==0)&&(p.Imaginary==0)) throw( HSPVAR_ERROR_DIVZERO ); // 0èúéZÇµÇΩÇÁÉGÉâÅ[
+	A = (A * C + B * D) / (C * C + D * D);
+	B = (B * C - A * D) / (C * C + D * D);
+	*aftertype = mytype;
+}
