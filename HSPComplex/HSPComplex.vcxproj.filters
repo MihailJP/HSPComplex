@@ -21,11 +21,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="hsp3plugin.cpp">
       <Filter>ソース ファイル\HSP</Filter>
+    </ClCompile>
+    <ClCompile Include="hspvar_complex.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +39,12 @@
       <Filter>ヘッダー ファイル\HSP</Filter>
     </ClInclude>
     <ClInclude Include="hsp3struct.h">
+      <Filter>ヘッダー ファイル\HSP</Filter>
+    </ClInclude>
+    <ClInclude Include="hspvar_complex.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="hsp3debug.h">
       <Filter>ヘッダー ファイル\HSP</Filter>
     </ClInclude>
   </ItemGroup>

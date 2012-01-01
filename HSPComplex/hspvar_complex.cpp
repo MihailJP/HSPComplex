@@ -9,15 +9,11 @@
 
 #include "hsp3plugin.h"
 #include "hspvar_core.h"
+#include "hspvar_complex.h"
 
 
 // Core
 
-struct complex
-{
-	double Real;
-	double Imaginary;
-};
 static complex conv;
 static char custom[64];
 static short *aftertype;
@@ -223,12 +219,12 @@ static void AllocBlock( PVal *pval, PDAT *pdat, int size )
 
 /*------------------------------------------------------------*/
 
-EXPORT int HspVarFloat_typeid( void )
+EXPORT int HspVarComplex_typeid( void )
 {
 	return mytype;
 }
 
-EXPORT void HspVarFloat_Init( HspVarProc *p )
+EXPORT void HspVarComplex_Init( HspVarProc *p )
 {
 	aftertype = &p->aftertype;
 
@@ -275,3 +271,24 @@ EXPORT void HspVarFloat_Init( HspVarProc *p )
 }
 
 /*------------------------------------------------------------*/
+
+
+// •¡‘f”‚Ìˆø”‚ğæ“¾‚·‚é
+complex excomplex(void)
+{
+	complex Ret; Ret.Real = 0; Ret.Imaginary = 0;
+	complex *Tmp;
+	int prmStat = code_getprm();
+	switch (prmStat) {
+	case PARAM_OK: case PARAM_SPLIT:
+		if (mpval->flag != HspVarComplex_typeid()) throw HSPVAR_ERROR_TYPEMISS;
+		else {
+			Tmp = (complex *)mpval->pt;
+			Ret.Real = Tmp->Real; Ret.Imaginary = Tmp->Imaginary;
+		}
+		break;
+	default:
+		throw 5; //ˆø”‚ªÈ—ª‚³‚ê‚Ä‚½
+	}
+	return Ret;
+}
