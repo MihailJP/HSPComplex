@@ -190,3 +190,88 @@ static void HspVarComplex_DivI( PDAT *pval, const void *val )
 	B = (B * C - A * D) / (C * C + D * D);
 	*aftertype = mytype;
 }
+
+// Eq
+static void HspVarComplex_EqI( PDAT *pval, const void *val )
+{
+	*((int *)pval) = ( (A==C)&&(B==D) );
+	*aftertype = HSPVAR_FLAG_INT;
+}
+
+// Ne
+static void HspVarComplex_NeI( PDAT *pval, const void *val )
+{
+	*((int *)pval) = ( (A!=C)||(B!=D) );
+	*aftertype = HSPVAR_FLAG_INT;
+}
+
+// INVALID
+static void HspVarComplex_Invalid( PDAT *pval, const void *val )
+{
+	throw( HSPVAR_ERROR_INVALID );
+}
+
+static void *GetBlockSize( PVal *pval, PDAT *pdat, int *size )
+{
+	*size = pval->size - ( ((char *)pdat) - pval->pt );
+	return (pdat);
+}
+
+static void AllocBlock( PVal *pval, PDAT *pdat, int size )
+{
+}
+
+/*------------------------------------------------------------*/
+
+EXPORT int HspVarFloat_typeid( void )
+{
+	return mytype;
+}
+
+EXPORT void HspVarFloat_Init( HspVarProc *p )
+{
+	aftertype = &p->aftertype;
+
+	p->Set = HspVarComplex_Set;
+	p->Cnv = HspVarComplex_Cnv;
+	p->GetPtr = HspVarComplex_GetPtr;
+	p->CnvCustom = HspVarComplex_CnvCustom;
+	p->GetSize = HspVarComplex_GetSize;
+	p->GetBlockSize = GetBlockSize;
+	p->AllocBlock = AllocBlock;
+
+//	p->ArrayObject = HspVarFloat_ArrayObject;
+	p->Alloc = HspVarComplex_Alloc;
+	p->Free = HspVarComplex_Free;
+
+	p->AddI = HspVarComplex_AddI;
+	p->SubI = HspVarComplex_SubI;
+	p->MulI = HspVarComplex_MulI;
+	p->DivI = HspVarComplex_DivI;
+	p->ModI = HspVarComplex_Invalid;
+
+	p->AndI = HspVarComplex_Invalid;
+	p->OrI  = HspVarComplex_Invalid;
+	p->XorI = HspVarComplex_Invalid;
+
+	p->EqI = HspVarComplex_EqI;
+	p->NeI = HspVarComplex_NeI;
+
+	// 複素数では大小関係が定義されない
+	p->GtI = HspVarComplex_Invalid;
+	p->LtI = HspVarComplex_Invalid;
+	p->GtEqI = HspVarComplex_Invalid;
+	p->LtEqI = HspVarComplex_Invalid;
+
+	p->RrI = HspVarComplex_Invalid;
+	p->LrI = HspVarComplex_Invalid;
+
+	p->vartype_name = "complex";				// タイプ名
+	p->version = 0x001;					// 型タイプランタイムバージョン(0x100 = 1.0)
+	p->support = HSPVAR_SUPPORT_STORAGE|HSPVAR_SUPPORT_FLEXARRAY;
+										// サポート状況フラグ(HSPVAR_SUPPORT_*)
+	p->basesize = sizeof(complex);		// １つのデータが使用するサイズ(byte) / 可変長の時は-1
+	mytype = p->flag;
+}
+
+/*------------------------------------------------------------*/

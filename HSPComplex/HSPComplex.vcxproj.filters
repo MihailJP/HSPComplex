@@ -16,10 +16,16 @@
     <Filter Include="ヘッダー ファイル\HSP">
       <UniqueIdentifier>{3e50b5d7-c3bb-461a-9607-df6a8e36909f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\HSP">
+      <UniqueIdentifier>{f7b8b037-f5a5-4925-8e53-bd373f263cf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="hsp3plugin.cpp">
+      <Filter>ソース ファイル\HSP</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
