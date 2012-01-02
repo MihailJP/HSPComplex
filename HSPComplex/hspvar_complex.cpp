@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "hsp3plugin.h"
+#include "calculate_complex.h"
 #include "hspvar_core.h"
 #include "hspvar_complex.h"
 
@@ -29,12 +30,10 @@ static void *HspVarComplex_Cnv(const void *buffer, int flag)
 	/* ï°ëfêîå^Ç÷ÇÃïœä∑ */
 	switch (flag) {
 	case HSPVAR_FLAG_INT:
-		conv.Real = (double)(*(int *)buffer);
-		conv.Imaginary = 0;
+		conv = complex((double)(*(int *)buffer), 0);
 		return &conv;
 	case HSPVAR_FLAG_DOUBLE:
-		conv.Real = (double)(*(double *)buffer);
-		conv.Imaginary = 0;
+		conv = complex((double)(*(int *)buffer), 0);
 		return &conv;
 	case HSPVAR_FLAG_STR:
 		/* ñ¢é¿ëï */
@@ -144,60 +143,47 @@ static void HspVarComplex_Set( PVal *pval, PDAT *pdat, const void *in )
 	*((complex *)pdat) = *((complex *)(in));
 }
 
-#define A (((complex *)pval)->Real)
-#define B (((complex *)pval)->Imaginary)
-#define C (((complex *)val)->Real)
-#define D (((complex *)val)->Imaginary)
-
 // Add
 static void HspVarComplex_AddI( PDAT *pval, const void *val )
 {
-	// (a + bi) + (c + di) = (a + c) + (b + d)i
-	A += C;
-	B += D;
+	*((complex *)pval) += *((complex *)val);
 	*aftertype = mytype;
 }
 
 // Sub
 static void HspVarComplex_SubI( PDAT *pval, const void *val )
 {
-	// (a + bi) - (c + di) = (a - c) + (b - d)i
-	A -= C;
-	B -= D;
+	*((complex *)pval) -= *((complex *)val);
 	*aftertype = mytype;
 }
 
 // Mul
 static void HspVarComplex_MulI( PDAT *pval, const void *val )
 {
-	// (a + bi) (c + di) = (ac - bd) + (bc + ad)i
-	A = A * C - B * D;
-	B = B * C + A * D;
+	*((complex *)pval) *= *((complex *)val);
 	*aftertype = mytype;
 }
 
 // Div
 static void HspVarComplex_DivI( PDAT *pval, const void *val )
 {
-	// (a + bi) / (c + di) = (ac + bd) / (c^2 + d^2) + (bc - ad)i / (c^2 + d^2)
 	complex p = *((complex *)(val));
 	if ((p.Real==0)&&(p.Imaginary==0)) throw( HSPVAR_ERROR_DIVZERO ); // 0èúéZÇµÇΩÇÁÉGÉâÅ[
-	A = (A * C + B * D) / (C * C + D * D);
-	B = (B * C - A * D) / (C * C + D * D);
+	*((complex *)pval) /= *((complex *)val);
 	*aftertype = mytype;
 }
 
 // Eq
 static void HspVarComplex_EqI( PDAT *pval, const void *val )
 {
-	*((int *)pval) = ( (A==C)&&(B==D) );
+	*((int *)pval) = ( *((complex *)pval) == *((complex *)val) );
 	*aftertype = HSPVAR_FLAG_INT;
 }
 
 // Ne
 static void HspVarComplex_NeI( PDAT *pval, const void *val )
 {
-	*((int *)pval) = ( (A!=C)||(B!=D) );
+	*((int *)pval) = ( *((complex *)pval) != *((complex *)val) );
 	*aftertype = HSPVAR_FLAG_INT;
 }
 

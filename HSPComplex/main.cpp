@@ -10,6 +10,7 @@
 #include <math.h>
 #include "hsp3plugin.h"
 
+#include "calculate_complex.h"
 #include "hspvar_complex.h"
 
  /*------------------------------------------------------------*/
@@ -26,7 +27,7 @@ static void *reffunc( int *type_res, int cmd )
 	//		関数・システム変数の実行処理 (値の参照時に呼ばれます)
 	//
 
-	int answerType = 0; int prmType;
+	int answerType = 0;
 
 	//			'('で始まるかを調べる
 	//
@@ -48,15 +49,32 @@ static void *reffunc( int *type_res, int cmd )
 	case 0x01:								// abscx関数
 		// r = sqrt(x^2 + y^2)
 		cp1 = excomplex();					// 複素数値を取得
-		ref_dval = sqrt(cp1.Real * cp1.Real + cp1.Imaginary * cp1.Imaginary);
+		ref_dval = abscx(cp1);
 		answerType = 0;						// 返り値は実数数
 		break;
 
 	case 0x02:								// argcx関数
 		// theta = arctan(y / x)
 		cp1 = excomplex();
-		ref_dval = atan2(cp1.Imaginary, cp1.Real);
+		ref_dval = argcx(cp1);
 		answerType = 0;
+		break;
+
+	case 0x03:								// conjg関数
+		// 共役複素数を返す
+		cp1 = excomplex();
+		ref_cval.Real = cp1.Real;
+		ref_cval.Imaginary = -cp1.Imaginary;
+		answerType = 1;
+		break;
+
+	case 0x04:								// logcx関数
+		// 複素自然対数関数
+		cp1 = excomplex();
+
+		ref_cval.Real = cp1.Real;
+		ref_cval.Imaginary = -cp1.Imaginary;
+		answerType = 1;
 		break;
 
 	default:

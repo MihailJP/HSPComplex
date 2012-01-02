@@ -76,11 +76,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="calculate_complex.cpp" />
     <ClCompile Include="hsp3plugin.cpp" />
     <ClCompile Include="hspvar_complex.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="calculate_complex.h" />
     <ClInclude Include="hsp3debug.h" />
     <ClInclude Include="hsp3plugin.h" />
     <ClInclude Include="hsp3struct.h" />
