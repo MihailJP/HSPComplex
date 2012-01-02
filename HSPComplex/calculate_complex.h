@@ -1,8 +1,6 @@
 #ifndef __calculate_complex_h
 #define __calculate_complex_h
 
-#define MINIMAL_TEST
-
 struct complex
 {
 	double Real;

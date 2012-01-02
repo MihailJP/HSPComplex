@@ -161,7 +161,6 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
-#ifndef MINIMAL_TEST
 	case 0x30:								// sinhcxä÷êî
 		// ëoã»ê¸ê≥å∑
 		cp1 = excomplex();
@@ -204,7 +203,6 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
-#endif
 	default:
 		puterror( HSPERR_UNSUPPORTED_FUNCTION );
 	}

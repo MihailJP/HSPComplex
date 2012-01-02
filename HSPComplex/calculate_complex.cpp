@@ -220,19 +220,18 @@ complex atancx(const complex arg)
 
 
 
-#ifndef MINIMAL_TEST
 /* ‘o‹Èü³Œ· */
 complex sinhcx(const complex arg)
 {
 	// sinh x = (e ^ x - e ^ (-x)) / 2
-	return (expcx(arg) - expcx(-arg)) / cmplx(2,0);
+	return cxdiv(cxsub(expcx(arg), expcx(cxmul(cmplx(-1,0),arg))), cmplx(2,0));
 }
 
 /* ‘o‹Èü—]Œ· */
 complex coshcx(const complex arg)
 {
 	// cosh x = (e ^ x + e ^ (-x)) / 2
-	return (expcx(arg) + expcx(-arg)) / cmplx(2,0);
+	return cxdiv(cxadd(expcx(arg), expcx(cxmul(cmplx(-1,0),arg))), cmplx(2,0));
 }
 
 /* ‘o‹Èü³Ú */
@@ -240,7 +239,7 @@ complex tanhcx(const complex arg)
 {
 	// tanh ƒÆ = sinh ƒÆ / cosh ƒÆ
 	if (arg.Imaginary)
-		return sinhcx(arg) / coshcx(arg);
+		return cxdiv(sinhcx(arg), coshcx(arg));
 	else /* À”‚Ì‚Í•’Ê‚Ìƒ‰ƒCƒuƒ‰ƒŠŠÖ”‚ğg‚¤ */
 		return cmplx(tanh(arg.Real), 0);
 }
@@ -249,20 +248,19 @@ complex tanhcx(const complex arg)
 complex asinhcx(const complex arg)
 {
 	// arsinh x = ln (x + sqrt(x ^ 2 + 1))
-	return logcx(arg + sqrtcx(arg * arg + cmplx(1,0)));
+	return logcx(cxadd(arg, sqrtcx(cxadd(cxmul(arg, arg), cmplx(1,0)))));
 }
 
 /* ‘o‹Èü‹t—]Œ· */
 complex acoshcx(const complex arg)
 {
 	// arsinh x = ln (x + sqrt(x ^ 2 - 1)); x>= 1
-	return logcx(arg + sqrtcx(arg * arg - cmplx(1,0)));
+	return logcx(cxadd(arg, sqrtcx(cxsub(cxmul(arg, arg), cmplx(1,0)))));
 }
 
 /* ‘o‹Èü‹t³Ú */
 complex atanhcx(const complex arg)
 {
 	// arctanh x = 0.5 ln ((1 + x) / (1 - x)); |x| < 1
-	return cmplx(0.5,0) * logcx((cmplx(1,0) + arg) / (cmplx(1,0) - arg));
+	return cxmul(cmplx(0.5,0), logcx(cxdiv(cxadd(cmplx(1,0), arg), cxsub(cmplx(1,0), arg))));
 }
-#endif
