@@ -47,7 +47,6 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;						// •Ô‚è’l‚Í•¡‘f”
 		break;
 
-#ifndef MINIMAL_TEST
 	case 0x00:								// complexŠÖ”
 		dp1 = code_getdd(0.0);				// À”’l‚ğæ“¾
 		dp2 = code_getdd(0.0);
@@ -162,6 +161,7 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
+#ifndef MINIMAL_TEST
 	case 0x30:								// sinhcxŠÖ”
 		// ‘o‹Èü³Œ·
 		cp1 = excomplex();

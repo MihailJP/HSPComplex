@@ -84,7 +84,6 @@ complex conjg(const complex arg)
 
 
 
-#ifndef MINIMAL_TEST
 /* 自然対数 */
 complex logcx(const complex arg)
 {
@@ -97,7 +96,7 @@ complex logcx(const complex arg)
 /* 対数関数 */
 complex logcx(const complex arg, const complex base)
 {
-	return logcx(arg) / logcx(base);
+	return cxdiv(logcx(arg), logcx(base));
 }
 
 /* 常用対数 */
@@ -122,7 +121,7 @@ complex powcx(const complex arg, const complex exponent)
 	// 誤差を極力抑えるために場合分け
 	// a ^ z = e ^ (z ln a)
 	if (exponent.Imaginary) /* 虚数乗の場合 */
-		return expcx(exponent * logcx(arg));
+		return expcx(cxmul(exponent, logcx(arg)));
 	else if ((arg.Real < 0)&&(arg.Imaginary == 0)&&((exponent.Real * 2)==floor(exponent.Real * 2))) /* 負の実数の半整数乗 */
 		switch ((int)floor(exponent.Real * 2) % 4) {
 		case 0: // 実軸プラス
@@ -184,7 +183,7 @@ complex tancx(const complex arg)
 {
 	// tan x = sin x / cos x
 	if (arg.Imaginary)
-		return sincx(arg) / coscx(arg);
+		return cxdiv(sincx(arg), coscx(arg));
 	else /* 実数の時は普通のライブラリ関数を使う */
 		return cmplx(tan(arg.Real), 0);
 }
@@ -193,25 +192,35 @@ complex tancx(const complex arg)
 complex asincx(const complex arg)
 {
 	// arcsin z = -i log (iz + sqrt(1 - z ^ 2))
-	return -I * logcx(I * arg + sqrtcx(cmplx(1,0) - arg * arg));
+	// [PN] *(-i, log(+(*(i, z), sqrt(-(1, *(z, z))))))
+	return cxmul(cmplx(0, -1),
+		logcx(cxadd(cxmul(cmplx(0,1), arg),sqrtcx(cxsub(cmplx(1,0), cxmul(arg, arg)))))
+		);
 }
 
 /* 逆余弦 */
 complex acoscx(const complex arg)
 {
 	// arccos z = -i log (z + sqrt(z ^ 2 - 1))
-	return -I * logcx(arg + sqrtcx(arg * arg - cmplx(1,0)));
+	// [PN] *(-i, log(+(z, sqrt(-(*(z, z), 1)))))
+	return cxmul(cmplx(0,-1), logcx(cxadd(arg, sqrtcx(cxsub(cxmul(arg, arg), cmplx(1,0))))));
 }
 
 /* 逆正接 */
 complex atancx(const complex arg)
 {
 	// arctan z = 0.5i log ((1 - iz) / (1 + iz))
-	return cmplx(-0.5,0) * I * logcx((cmplx(1,0) - I * arg) / (cmplx(1,0) + I * arg));
+	// [PN] *(0.5i, log(/(-(1, *(z, i)), +(1, *(z, i)))))
+	return cxmul(
+		cmplx(0,0.5),
+		logcx(cxdiv(cxsub(cmplx(1,0), cxmul(arg, cmplx(0,1))),
+		cxadd(cmplx(1,0), cxmul(arg, cmplx(0,1)))))
+		);
 }
 
 
 
+#ifndef MINIMAL_TEST
 /* 双曲線正弦 */
 complex sinhcx(const complex arg)
 {
