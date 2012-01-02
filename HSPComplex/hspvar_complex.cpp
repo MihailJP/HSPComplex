@@ -4,6 +4,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "hsp3plugin.h"
 #include "calculate_complex.h"
@@ -49,21 +52,33 @@ static void *HspVarComplex_CnvCustom(const void *buffer, int flag)
 	/* 複素数型から変換 */
 	complex p;
 	p = *(complex *)buffer;
-	char realstr[32] = ""; char imagstr[32] = "";
+	char realstr[32] = ""; char imagstr[32] = ""; char imagstr_tmp[32]; int mantlen;
 	switch (flag) {
 	case HSPVAR_FLAG_INT:
 		if (p.Imaginary == 0) *(int *)custom = (int)p.Real;
 		else throw HSPVAR_ERROR_ILLEGALPRM; // 虚部が0でない場合はエラー
 		break;
 	case HSPVAR_FLAG_DOUBLE:
-#ifndef MINIMAL_TEST
-		*(double *)custom = (double)p;
-#else
-		*(double *)custom = p.Real;
-#endif
+		if (p.Imaginary) *(double *)custom = sqrt(-1.0); // 虚数だったらNaNを返す
+		else *(double *)custom = p.Real;
 		break;
 	case HSPVAR_FLAG_STR:
-		*(char *)custom = *complex2str(p);
+		//*(char *)custom = *"aaaaa";
+		if (p.Real != 0) sprintf(realstr, "%g", p.Real);
+		if (p.Imaginary != 0) {
+			memset(imagstr_tmp, 0, sizeof(imagstr_tmp)); //作業用バッファを初期化して0で埋める
+			sprintf(imagstr_tmp, "%g", p.Imaginary);
+			mantlen = (int)strcspn(imagstr_tmp, "e");
+			imagstr_tmp[mantlen] = (char)0; // eがあったらそこで分割
+			char* imagstr_exp = imagstr_tmp + mantlen + 1; //指数部へのポインタ
+			if((p.Real != 0)&&(p.Imaginary > 0)) strcat(imagstr, "+"); // 混虚数で虚部がプラスなら符号をつける
+			strcat(imagstr, imagstr_tmp); strcat(imagstr, "i");
+			if (*imagstr_exp != '\0') { // 虚部が指数表記だったら
+				strcat(imagstr, "e"); strcat(imagstr, imagstr_exp);
+			}
+		}
+		if ((p.Real == 0)&&(p.Imaginary == 0)) sprintf(custom, "%g", 0.0);
+		else sprintf(custom, "%s%s", realstr, imagstr);
 		break;
 	default:
 		throw HSPVAR_ERROR_TYPEMISS;
@@ -133,25 +148,24 @@ static void HspVarComplex_Set( PVal *pval, PDAT *pdat, const void *in )
 	*((complex *)pdat) = *((complex *)(in));
 }
 
-#ifndef MINIMAL_TEST
 // Add
 static void HspVarComplex_AddI( PDAT *pval, const void *val )
 {
-	*((complex *)pval) += *((complex *)val);
+	*((complex *)pval) = cxadd(*((complex *)pval), *((complex *)val));
 	*aftertype = mytype;
 }
 
 // Sub
 static void HspVarComplex_SubI( PDAT *pval, const void *val )
 {
-	*((complex *)pval) -= *((complex *)val);
+	*((complex *)pval) = cxsub(*((complex *)pval), *((complex *)val));
 	*aftertype = mytype;
 }
 
 // Mul
 static void HspVarComplex_MulI( PDAT *pval, const void *val )
 {
-	*((complex *)pval) *= *((complex *)val);
+	*((complex *)pval) = cxmul(*((complex *)pval), *((complex *)val));
 	*aftertype = mytype;
 }
 
@@ -160,24 +174,29 @@ static void HspVarComplex_DivI( PDAT *pval, const void *val )
 {
 	complex p = *((complex *)(val));
 	if ((p.Real==0)&&(p.Imaginary==0)) throw( HSPVAR_ERROR_DIVZERO ); // 0除算したらエラー
-	*((complex *)pval) /= *((complex *)val);
+	*((complex *)pval) = cxdiv(*((complex *)pval), *((complex *)val));
 	*aftertype = mytype;
 }
 
 // Eq
 static void HspVarComplex_EqI( PDAT *pval, const void *val )
 {
-	*((int *)pval) = ( *((complex *)pval) == *((complex *)val) );
+	*((int *)pval) = (
+		(((complex *)pval)->Real == ((complex *)val)->Real)
+		&&(((complex *)pval)->Imaginary == ((complex *)val)->Imaginary)
+		);
 	*aftertype = HSPVAR_FLAG_INT;
 }
 
 // Ne
 static void HspVarComplex_NeI( PDAT *pval, const void *val )
 {
-	*((int *)pval) = ( *((complex *)pval) != *((complex *)val) );
+	*((int *)pval) = (
+		(((complex *)pval)->Real != ((complex *)val)->Real)
+		||(((complex *)pval)->Imaginary != ((complex *)val)->Imaginary)
+		);
 	*aftertype = HSPVAR_FLAG_INT;
 }
-#endif
 
 // INVALID
 static void HspVarComplex_Invalid( PDAT *pval, const void *val )
@@ -218,7 +237,6 @@ EXPORT void HspVarComplex_Init( HspVarProc *p )
 	p->Alloc = HspVarComplex_Alloc;
 	p->Free = HspVarComplex_Free;
 
-#ifndef MINIMAL_TEST
 	p->AddI = HspVarComplex_AddI;
 	p->SubI = HspVarComplex_SubI;
 	p->MulI = HspVarComplex_MulI;
@@ -240,7 +258,6 @@ EXPORT void HspVarComplex_Init( HspVarProc *p )
 
 	p->RrI = HspVarComplex_Invalid;
 	p->LrI = HspVarComplex_Invalid;
-#endif
 
 	p->vartype_name = "complex";				// タイプ名
 	p->version = 0x001;					// 型タイプランタイムバージョン(0x100 = 1.0)

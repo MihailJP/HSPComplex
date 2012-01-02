@@ -43,7 +43,7 @@ static void *reffunc( int *type_res, int cmd )
 		//ref_cval = cmplx(3, 4);		// •Ô’l‚ğİ’è
 		//ref_dval = ref_cval.Real;
 		//ref_dval = ref_cval.Real;
-		ref_cval.Real = 3; ref_cval.Imaginary = 4;
+		ref_cval.Real = 123; ref_cval.Imaginary = 456;
 		answerType = 1;						// •Ô‚è’l‚Í•¡‘f”
 		break;
 

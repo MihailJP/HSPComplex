@@ -7,119 +7,51 @@
 /* NaNを返したいのにVC++だとそういう関数定義されてないってどういうことですかー */
 const double NaN = ::sqrt(-1.0);
 
-complex cmplx(double Real, double Imaginary) {
+complex cmplx(const double Real, const double Imaginary) {
 	complex val;
 	val.Real = Real; val.Imaginary = Imaginary;
 	return val;
 }
 
-#ifndef MINIMAL_TEST
-/* 演算子オーバーロード */
-
-#define A (Real)
-#define B (Imaginary)
-#define C (val.Real)
-#define D (val.Imaginary)
-
-complex complex::operator+() const{
+/* 演算子オーバーロードで実装しようとするとバグってしまったので関数で実装 */
+/* ポーランド記法しろっていうのかよー むかつくー */
+complex cxadd(const complex arg1, const complex arg2)
+{
 	// (a + bi) + (c + di) = (a + c) + (b + d)i
-	return cmplx(A, B);
+	return cmplx(
+		arg1.Real + arg2.Real,
+		arg1.Imaginary + arg2.Imaginary
+		);
 }
-complex complex::operator-() const{
+complex cxsub(const complex arg1, const complex arg2)
+{
 	// (a + bi) - (c + di) = (a - c) + (b - d)i
-	return cmplx(-A, -B);
+	return cmplx(
+		arg1.Real - arg2.Real,
+		arg1.Imaginary - arg2.Imaginary
+		);
 }
-complex complex::operator=(complex &val) {
-	return cmplx(C, D);
-}
-complex complex::operator+(const complex &val) const{
-	// (a + bi) + (c + di) = (a + c) + (b + d)i
-	return cmplx(A + C, B + D);
-}
-complex complex::operator-(const complex &val) const{
-	// (a + bi) - (c + di) = (a - c) + (b - d)i
-	return cmplx(A - C, B - D);
-}
-complex complex::operator*(const complex &val) const{
+complex cxmul(const complex arg1, const complex arg2)
+{
 	// (a + bi) (c + di) = (ac - bd) + (bc + ad)i
 	return cmplx(
-		A * C - B * D,
-		B * C + A * D
-	);
+		arg1.Real * arg2.Real - arg1.Imaginary * arg2.Imaginary,
+		arg1.Imaginary * arg2.Real + arg1.Real * arg2.Imaginary
+		);
 }
-complex complex::operator/(const complex &val) const{
+complex cxdiv(const complex arg1, const complex arg2)
+{
 	// (a + bi) / (c + di) = (ac + bd) / (c^2 + d^2) + (bc - ad)i / (c^2 + d^2)
 	return cmplx(
-		(A * C + B * D) / (C * C + D * D),
-		(B * C - A * D) / (C * C + D * D)
-	);
-}
-complex complex::operator+=(complex &val) {
-	return cmplx(A + C, B + D);
-}
-complex complex::operator-=(complex &val) {
-	return cmplx(A - C, B - D);
-}
-complex complex::operator*=(complex &val) {
-	return cmplx(
-		A * C - B * D,
-		B * C + A * D
-	);
-}
-complex complex::operator/=(complex &val) {
-	return cmplx(
-		(A * C + B * D) / (C * C + D * D),
-		(B * C - A * D) / (C * C + D * D)
-	);
-}
-bool complex::operator==(complex &val) {
-	return ( (A==C)&&(B==D) );
-}
-bool complex::operator!=(complex &val) {
-	return ( (A!=C)||(B!=D) );
-}
-
-#undef A
-#undef B
-#undef C
-#undef D
-
-/* キャスト演算子のオーバーロード */
-complex::operator double() {
-	if (Imaginary) return NaN;
-	else return Real;
+		(arg1.Real * arg2.Real + arg1.Imaginary * arg2.Imaginary) /
+			(arg2.Real * arg2.Real + arg2.Imaginary * arg2.Imaginary),
+		(arg1.Imaginary * arg2.Real - arg1.Real * arg2.Imaginary) /
+			(arg2.Real * arg2.Real + arg2.Imaginary * arg2.Imaginary)
+		);
 }
 
 
 
-/* 関数 */
-
-#define I (cmplx(0,1))
-
-#endif
-/* 文字列に変換 */
-char *complex2str(const complex val) {
-	static char result[64] = "";
-	char realstr[32] = ""; char imagstr[32] = ""; char imagstr_tmp[32]; int mantlen;
-	if (val.Real) sprintf(realstr, "%g", val.Real);
-	if (val.Imaginary) {
-		memset(imagstr_tmp, 0, sizeof(imagstr_tmp)); //作業用バッファを初期化して0で埋める
-		sprintf(imagstr_tmp, "%g", val.Imaginary);
-		mantlen = (int)strcspn(imagstr_tmp, "e");
-		imagstr_tmp[mantlen] = (char)0; // eがあったらそこで分割
-		char* imagstr_exp = imagstr_tmp + mantlen + 1; //指数部へのポインタ
-		if((val.Real != 0)&&(val.Imaginary > 0)) strcat(imagstr, "+"); // 混虚数で虚部がプラスなら符号をつける
-		strcat(imagstr, imagstr_tmp); strcat(imagstr, "i");
-		if (*imagstr_exp != '\0') { // 虚部が指数表記だったら
-			strcat(imagstr, "e"); strcat(imagstr, imagstr_exp);
-		}
-	}
-	strcat(result, realstr); strcat(result, imagstr);
-	if ((val.Real == 0)&&(val.Imaginary == 0)) sprintf(result, "%g", 0.0);
-	return result;
-}
-
-#ifndef MINIMAL_TEST
 /* 極形式を直交形式にする */
 complex polar(const double modulus, const double argument)
 {
@@ -152,6 +84,7 @@ complex conjg(const complex arg)
 
 
 
+#ifndef MINIMAL_TEST
 /* 自然対数 */
 complex logcx(const complex arg)
 {

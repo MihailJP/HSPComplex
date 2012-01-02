@@ -7,32 +7,19 @@ struct complex
 {
 	double Real;
 	double Imaginary;
-
-#ifndef MINIMAL_TEST
-	//complex(double real=0.0, double imaginary=0.0): Real(real), Imaginary(imaginary) {};
-	complex operator+() const;
-	complex operator-() const;
-	complex operator=(complex &val);
-	complex operator+(const complex &val) const;
-	complex operator-(const complex &val) const;
-	complex operator*(const complex &val) const;
-	complex operator/(const complex &val) const;
-	complex operator+=(complex &val);
-	complex operator-=(complex &val);
-	complex operator*=(complex &val);
-	complex operator/=(complex &val);
-	bool operator==(complex &val);
-	bool operator!=(complex &val);
-	operator double();
-#endif
 };
 
-complex cmplx(double Real, double Imaginary);
-char *complex2str(const complex val);
+complex cmplx(const double Real, const double Imaginary);
+complex cxadd(const complex arg1, const complex arg2);
+complex cxsub(const complex arg1, const complex arg2);
+complex cxmul(const complex arg1, const complex arg2);
+complex cxdiv(const complex arg1, const complex arg2);
+
 complex polar(const double modulus, const double argument);
 double abscx(const complex arg);
 double argcx(const complex arg);
 complex conjg(const complex arg);
+
 complex logcx(const complex arg);
 complex logcx(const complex arg, const complex base);
 complex log10cx(const complex arg);
