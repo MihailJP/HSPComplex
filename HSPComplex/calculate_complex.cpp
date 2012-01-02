@@ -242,3 +242,50 @@ complex atancx(static complex arg)
 	// arctan z = 0.5i log ((1 - iz) / (1 + iz))
 	return -0.5 * I * logcx((1 - I * arg) / (1 + I * arg));
 }
+
+
+
+/* ‘o‹Èü³Œ· */
+complex sinhcx(static complex arg)
+{
+	// sinh x = (e ^ x - e ^ (-x)) / 2
+	return (expcx(arg) - expcx(-arg)) / 2;
+}
+
+/* ‘o‹Èü—]Œ· */
+complex coshcx(static complex arg)
+{
+	// cosh x = (e ^ x + e ^ (-x)) / 2
+	return (expcx(arg) + expcx(-arg)) / 2;
+}
+
+/* ‘o‹Èü³Ú */
+complex tanhcx(static complex arg)
+{
+	// tanh ƒÆ = sinh ƒÆ / cosh ƒÆ
+	if (arg.Imaginary)
+		return sinhcx(arg) / coshcx(arg);
+	else /* À”‚Ì‚Í•’Ê‚Ìƒ‰ƒCƒuƒ‰ƒŠŠÖ”‚ğg‚¤ */
+		return complex(tanh(arg.Real), 0);
+}
+
+/* ‘o‹Èü‹t³Œ· */
+complex asinhcx(static complex arg)
+{
+	// arsinh x = ln (x + sqrt(x ^ 2 + 1))
+	return logcx(arg + sqrtcx(arg * arg + 1));
+}
+
+/* ‘o‹Èü‹t—]Œ· */
+complex acoshcx(static complex arg)
+{
+	// arsinh x = ln (x + sqrt(x ^ 2 - 1)); x>= 1
+	return logcx(arg + sqrtcx(arg * arg - 1));
+}
+
+/* ‘o‹Èü‹t³Ú */
+complex atanhcx(static complex arg)
+{
+	// arctanh x = 0.5 ln ((1 + x) / (1 - x)); |x| < 1
+	return 0.5 * logcx((1 + arg) / (1 - arg));
+}

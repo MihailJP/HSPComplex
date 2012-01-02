@@ -43,4 +43,11 @@ complex asincx(static complex arg);
 complex acoscx(static complex arg);
 complex atancx(static complex arg);
 
+complex sinhcx(static complex arg);
+complex coshcx(static complex arg);
+complex tanhcx(static complex arg);
+complex asinhcx(static complex arg);
+complex acoshcx(static complex arg);
+complex atanhcx(static complex arg);
+
 #endif

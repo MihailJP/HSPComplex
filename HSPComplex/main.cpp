@@ -152,6 +152,48 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
+	case 0x30:								// sinhcxŠÖ”
+		// ‘o‹Èü³Œ·
+		cp1 = excomplex();
+		ref_cval = sinhcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x31:								// coshcxŠÖ”
+		// ‘o‹Èü—]Œ·
+		cp1 = excomplex();
+		ref_cval = coshcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x32:								// tanhcxŠÖ”
+		// ‘o‹Èü³Ú
+		cp1 = excomplex();
+		ref_cval = tanhcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x38:								// asinhcxŠÖ”
+		// ‘o‹Èü‹t³Œ·
+		cp1 = excomplex();
+		ref_cval = asinhcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x39:								// acoshcxŠÖ”
+		// ‘o‹Èü‹t—]Œ·
+		cp1 = excomplex();
+		ref_cval = acoshcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x3A:								// atanhcxŠÖ”
+		// ‘o‹Èü‹t³Ú
+		cp1 = excomplex();
+		ref_cval = atanhcx(cp1);
+		answerType = 1;
+		break;
+
 	default:
 		puterror( HSPERR_UNSUPPORTED_FUNCTION );
 	}
