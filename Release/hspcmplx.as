@@ -1,0 +1,23 @@
+#regcmd "_hsp3cmdinit@4", "HSPComplex.dll", 1
+#cmd complex 0x00
+#cmd abscx 0x01
+#cmd argcx 0x02
+#cmd conjg 0x03
+#cmd polar 0x04
+#cmd logcx 0x10
+#cmd log10cx 0x11
+#cmd expcx 0x14
+#cmd powcx 0x15
+#cmd sqrtcx 0x16
+#cmd sincx 0x20
+#cmd coscx 0x21
+#cmd tancx 0x22
+#cmd asincx 0x28
+#cmd acoscx 0x29
+#cmd atancx 0x2a
+#cmd sinhcx 0x30
+#cmd coshcx 0x31
+#cmd tanhcx 0x32
+#cmd asinhcx 0x38
+#cmd acoshcx 0x39
+#cmd atanhcx 0x3a
