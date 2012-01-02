@@ -4,8 +4,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <stdio.h>
-#include <string.h>
 
 #include "hsp3plugin.h"
 #include "calculate_complex.h"
@@ -30,10 +28,12 @@ static void *HspVarComplex_Cnv(const void *buffer, int flag)
 	/* 複素数型への変換 */
 	switch (flag) {
 	case HSPVAR_FLAG_INT:
-		conv = complex((double)(*(int *)buffer), 0);
+		conv.Real = (double)(*(int *)buffer);
+		conv.Imaginary = 0.0;
 		return &conv;
 	case HSPVAR_FLAG_DOUBLE:
-		conv = complex((double)(*(int *)buffer), 0);
+		conv.Real = (double)(*(double *)buffer);
+		conv.Imaginary = 0.0;
 		return &conv;
 	case HSPVAR_FLAG_STR:
 		/* 未実装 */
@@ -49,17 +49,21 @@ static void *HspVarComplex_CnvCustom(const void *buffer, int flag)
 	/* 複素数型から変換 */
 	complex p;
 	p = *(complex *)buffer;
-	char realstr[32] = ""; char imagstr[32] = ""; char imagstr_tmp[32]; int mantlen;
+	char realstr[32] = ""; char imagstr[32] = "";
 	switch (flag) {
 	case HSPVAR_FLAG_INT:
 		if (p.Imaginary == 0) *(int *)custom = (int)p.Real;
 		else throw HSPVAR_ERROR_ILLEGALPRM; // 虚部が0でない場合はエラー
 		break;
 	case HSPVAR_FLAG_DOUBLE:
+#ifndef MINIMAL_TEST
 		*(double *)custom = (double)p;
+#else
+		*(double *)custom = p.Real;
+#endif
 		break;
 	case HSPVAR_FLAG_STR:
-		*(char *)custom = (char)p;
+		*(char *)custom = *complex2str(p);
 		break;
 	default:
 		throw HSPVAR_ERROR_TYPEMISS;
@@ -129,6 +133,7 @@ static void HspVarComplex_Set( PVal *pval, PDAT *pdat, const void *in )
 	*((complex *)pdat) = *((complex *)(in));
 }
 
+#ifndef MINIMAL_TEST
 // Add
 static void HspVarComplex_AddI( PDAT *pval, const void *val )
 {
@@ -172,6 +177,7 @@ static void HspVarComplex_NeI( PDAT *pval, const void *val )
 	*((int *)pval) = ( *((complex *)pval) != *((complex *)val) );
 	*aftertype = HSPVAR_FLAG_INT;
 }
+#endif
 
 // INVALID
 static void HspVarComplex_Invalid( PDAT *pval, const void *val )
@@ -212,6 +218,7 @@ EXPORT void HspVarComplex_Init( HspVarProc *p )
 	p->Alloc = HspVarComplex_Alloc;
 	p->Free = HspVarComplex_Free;
 
+#ifndef MINIMAL_TEST
 	p->AddI = HspVarComplex_AddI;
 	p->SubI = HspVarComplex_SubI;
 	p->MulI = HspVarComplex_MulI;
@@ -233,6 +240,7 @@ EXPORT void HspVarComplex_Init( HspVarProc *p )
 
 	p->RrI = HspVarComplex_Invalid;
 	p->LrI = HspVarComplex_Invalid;
+#endif
 
 	p->vartype_name = "complex";				// タイプ名
 	p->version = 0x001;					// 型タイプランタイムバージョン(0x100 = 1.0)

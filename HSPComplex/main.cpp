@@ -38,10 +38,20 @@ static void *reffunc( int *type_res, int cmd )
 
 	switch( cmd ) {							// サブコマンドごとの分岐
 
+	case 0xFF:								// test関数
+		dp1 = code_getdd(0.0);				// 実数値を取得
+		//ref_cval = cmplx(3, 4);		// 返値を設定
+		//ref_dval = ref_cval.Real;
+		//ref_dval = ref_cval.Real;
+		ref_cval.Real = 3; ref_cval.Imaginary = 4;
+		answerType = 1;						// 返り値は複素数
+		break;
+
+#ifndef MINIMAL_TEST
 	case 0x00:								// complex関数
-		dp1 = code_getdd(0);				// 実数値を取得
-		dp2 = code_getdd(0);
-		ref_cval = complex(dp1, dp2);		// 返値を設定
+		dp1 = code_getdd(0.0);				// 実数値を取得
+		dp2 = code_getdd(0.0);
+		ref_cval = cmplx(dp1, dp2);		// 返値を設定
 		answerType = 1;						// 返り値は複素数
 		break;
 
@@ -68,8 +78,8 @@ static void *reffunc( int *type_res, int cmd )
 
 	case 0x04:								// polar関数
 		// 極形式で入力
-		dp1 = code_getdd(0);
-		dp2 = code_getdd(0);
+		dp1 = code_getdd(0.0);
+		dp2 = code_getdd(0.0);
 		ref_cval = polar(dp1, dp2);
 		answerType = 1;
 		break;
@@ -194,6 +204,7 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
+#endif
 	default:
 		puterror( HSPERR_UNSUPPORTED_FUNCTION );
 	}

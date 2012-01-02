@@ -1,15 +1,15 @@
 #ifndef __calculate_complex_h
 #define __calculate_complex_h
 
+#define MINIMAL_TEST
+
 struct complex
 {
 	double Real;
 	double Imaginary;
 
-	complex(double real, double imaginary): Real(real), Imaginary(imaginary) {};
-	complex(double real): Real(real), Imaginary(0.0) {};
-	complex(int real): Real((double)real), Imaginary(0.0) {};
-	complex(): Real(0.0), Imaginary(0.0) {};
+#ifndef MINIMAL_TEST
+	//complex(double real=0.0, double imaginary=0.0): Real(real), Imaginary(imaginary) {};
 	complex operator+() const;
 	complex operator-() const;
 	complex operator=(complex &val);
@@ -24,9 +24,11 @@ struct complex
 	bool operator==(complex &val);
 	bool operator!=(complex &val);
 	operator double();
-	operator char*();
+#endif
 };
 
+complex cmplx(double Real, double Imaginary);
+char *complex2str(const complex val);
 complex polar(const double modulus, const double argument);
 double abscx(const complex arg);
 double argcx(const complex arg);
