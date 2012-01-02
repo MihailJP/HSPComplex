@@ -38,15 +38,6 @@ static void *reffunc( int *type_res, int cmd )
 
 	switch( cmd ) {							// サブコマンドごとの分岐
 
-	case 0xFF:								// test関数
-		dp1 = code_getdd(0.0);				// 実数値を取得
-		//ref_cval = cmplx(3, 4);		// 返値を設定
-		//ref_dval = ref_cval.Real;
-		//ref_dval = ref_cval.Real;
-		ref_cval.Real = 123; ref_cval.Imaginary = 456;
-		answerType = 1;						// 返り値は複素数
-		break;
-
 	case 0x00:								// complex関数
 		dp1 = code_getdd(0.0);				// 実数値を取得
 		dp2 = code_getdd(0.0);
