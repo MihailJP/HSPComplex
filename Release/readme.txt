@@ -63,10 +63,12 @@
 	coscx	•¡‘f”‚Ì—]Œ·‚ð•Ô‚·
 	coshcx	•¡‘f”‚Ì‘o‹Èü—]Œ·‚ð•Ô‚·
 	expcx	•¡‘f”‚ÌŽw”‚ð•Ô‚·
+	imagcx	•¡‘f”‚Ì‹••”‚ð•Ô‚·
 	log10cx	•¡‘f”‚Ìí—p‘Î”‚ð•Ô‚·
 	logcx	•¡‘f”‚ÌŽ©‘R‘Î”‚ð•Ô‚·
 	polar	‹ÉŒ`Ž®‚Å•¡‘f”‚É•ÏŠ·‚·‚é
 	powcx	•¡‘f”‚Ì™pæ‚ð‹‚ß‚é
+	realcx	•¡‘f”‚ÌŽÀ•”‚ð•Ô‚·
 	sincx	•¡‘f”‚Ì³Œ·‚ð•Ô‚·
 	sinhcx	•¡‘f”‚Ì‘o‹Èü³Œ·‚ð•Ô‚·
 	sqrtcx	•¡‘f”‚Ì•½•ûª‚ð•Ô‚·

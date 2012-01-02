@@ -74,6 +74,20 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
+	case 0x05:								// realcxŠÖ”
+		// À•”
+		cp1 = excomplex();
+		ref_dval = cp1.Real;
+		answerType = 0;
+		break;
+
+	case 0x06:								// imagcxŠÖ”
+		// ‹••”
+		cp1 = excomplex();
+		ref_dval = cp1.Imaginary;
+		answerType = 0;
+		break;
+
 	case 0x10:								// logcxŠÖ”
 		// •¡‘f©‘R‘Î”ŠÖ”
 		cp1 = excomplex();
