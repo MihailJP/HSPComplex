@@ -41,8 +41,7 @@ static void *reffunc( int *type_res, int cmd )
 	case 0x00:								// complex関数
 		dp1 = code_getdd(0);				// 実数値を取得
 		dp2 = code_getdd(0);
-		ref_cval.Real = dp1;				// 返値を設定
-		ref_cval.Imaginary = dp2;
+		ref_cval = complex(dp1, dp2);		// 返値を設定
 		answerType = 1;						// 返り値は複素数
 		break;
 
@@ -63,17 +62,51 @@ static void *reffunc( int *type_res, int cmd )
 	case 0x03:								// conjg関数
 		// 共役複素数を返す
 		cp1 = excomplex();
-		ref_cval.Real = cp1.Real;
-		ref_cval.Imaginary = -cp1.Imaginary;
+		ref_cval = conjg(cp1);
 		answerType = 1;
 		break;
 
-	case 0x04:								// logcx関数
+	case 0x04:								// polar関数
+		// 極形式で入力
+		dp1 = code_getdd(0);
+		dp2 = code_getdd(0);
+		ref_cval = polar(dp1, dp2);
+		answerType = 1;
+		break;
+
+	case 0x10:								// logcx関数
 		// 複素自然対数関数
 		cp1 = excomplex();
+		ref_cval = logcx(cp1);
+		answerType = 1;
+		break;
 
-		ref_cval.Real = cp1.Real;
-		ref_cval.Imaginary = -cp1.Imaginary;
+	case 0x11:								// log10cx関数
+		// 複素自然対数関数
+		cp1 = excomplex();
+		ref_cval = log10cx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x14:								// expcx関数
+		// 複素自然対数関数
+		cp1 = excomplex();
+		ref_cval = expcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x15:								// powcx関数
+		// 複素自然対数関数
+		cp1 = excomplex();
+		cp2 = excomplex();
+		ref_cval = powcx(cp1, cp2);
+		answerType = 1;
+		break;
+
+	case 0x16:								// sqrtcx関数
+		// 複素自然対数関数
+		cp1 = excomplex();
+		ref_cval = sqrtcx(cp1);
 		answerType = 1;
 		break;
 
