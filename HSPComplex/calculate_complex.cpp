@@ -1,4 +1,6 @@
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
 
@@ -12,25 +14,33 @@ const double NaN = ::sqrt(-1.0);
 #define C (val.Real)
 #define D (val.Imaginary)
 
+complex complex::operator+() const{
+	// (a + bi) + (c + di) = (a + c) + (b + d)i
+	return complex(A, B);
+}
+complex complex::operator-() const{
+	// (a + bi) - (c + di) = (a - c) + (b - d)i
+	return complex(-A, -B);
+}
 complex complex::operator=(complex &val) {
 	return complex(C, D);
 }
-complex complex::operator+(complex &val) {
+complex complex::operator+(const complex &val) const{
 	// (a + bi) + (c + di) = (a + c) + (b + d)i
 	return complex(A + C, B + D);
 }
-complex complex::operator-(complex &val) {
+complex complex::operator-(const complex &val) const{
 	// (a + bi) - (c + di) = (a - c) + (b - d)i
 	return complex(A - C, B - D);
 }
-complex complex::operator*(complex &val) {
+complex complex::operator*(const complex &val) const{
 	// (a + bi) (c + di) = (ac - bd) + (bc + ad)i
 	return complex(
 		A * C - B * D,
 		B * C + A * D
 	);
 }
-complex complex::operator/(complex &val) {
+complex complex::operator/(const complex &val) const{
 	// (a + bi) / (c + di) = (ac + bd) / (c^2 + d^2) + (bc - ad)i / (c^2 + d^2)
 	return complex(
 		(A * C + B * D) / (C * C + D * D),
@@ -55,16 +65,10 @@ complex complex::operator/=(complex &val) {
 		(B * C - A * D) / (C * C + D * D)
 	);
 }
-complex complex::operator+() {
-	return complex(A, B);
-}
-complex complex::operator-() {
-	return complex(-A, -B);
-}
-int complex::operator==(complex &val) {
+bool complex::operator==(complex &val) {
 	return ( (A==C)&&(B==D) );
 }
-int complex::operator!=(complex &val) {
+bool complex::operator!=(complex &val) {
 	return ( (A!=C)||(B!=D) );
 }
 
@@ -78,7 +82,25 @@ complex::operator double() {
 	if (Imaginary) return NaN;
 	else return Real;
 }
-
+complex::operator char *() {
+	static char result[64] = "";
+	char realstr[32] = ""; char imagstr[32] = ""; char imagstr_tmp[32]; int mantlen;
+	if (Real) sprintf(realstr, "%g", Real);
+	if (Imaginary) {
+		memset(imagstr_tmp, 0, sizeof(imagstr_tmp)); //ì‹Æ—pƒoƒbƒtƒ@‚ğ‰Šú‰»‚µ‚Ä0‚Å–„‚ß‚é
+		sprintf(imagstr_tmp, "%g", Imaginary);
+		mantlen = (int)strcspn(imagstr_tmp, "e");
+		imagstr_tmp[mantlen] = (char)0; // e‚ª‚ ‚Á‚½‚ç‚»‚±‚Å•ªŠ„
+		char* imagstr_exp = imagstr_tmp + mantlen + 1; //w”•”‚Ö‚Ìƒ|ƒCƒ“ƒ^
+		if((Real != 0)&&(Imaginary > 0)) strcat(imagstr, "+"); // ¬‹•”‚Å‹••”‚ªƒvƒ‰ƒX‚È‚ç•„†‚ğ‚Â‚¯‚é
+		strcat(imagstr, imagstr_tmp); strcat(imagstr, "i");
+		if (*imagstr_exp != '\0') { // ‹••”‚ªw”•\‹L‚¾‚Á‚½‚ç
+			strcat(imagstr, "e"); strcat(imagstr, imagstr_exp);
+		}
+	}
+	strcat(result, realstr); strcat(result, imagstr);
+	return result;
+}
 
 
 
@@ -87,7 +109,7 @@ complex::operator double() {
 #define I (complex(0,1))
 
 /* ‹ÉŒ`®‚ğ’¼ŒğŒ`®‚É‚·‚é */
-complex polar(static double modulus, static double argument)
+complex polar(const double modulus, const double argument)
 {
 	return complex(
 		modulus * cos(argument),
@@ -96,19 +118,19 @@ complex polar(static double modulus, static double argument)
 }
 
 /* â‘Î’l */
-double abscx(static complex arg)
+double abscx(const complex arg)
 {
 	return sqrt(arg.Real * arg.Real + arg.Imaginary * arg.Imaginary);
 }
 
 /* •ÎŠp */
-double argcx(static complex arg)
+double argcx(const complex arg)
 {
 	return atan2(arg.Imaginary, arg.Real);
 }
 
 /* •¡‘f‹¤–ğ */
-complex conjg(static complex arg)
+complex conjg(const complex arg)
 {
 	return complex(
 		arg.Real,
@@ -119,7 +141,7 @@ complex conjg(static complex arg)
 
 
 /* ©‘R‘Î” */
-complex logcx(static complex arg)
+complex logcx(const complex arg)
 {
 	return complex(
 		log(abscx(arg)),
@@ -128,19 +150,19 @@ complex logcx(static complex arg)
 }
 
 /* ‘Î”ŠÖ” */
-complex logcx(static complex arg, static complex base)
+complex logcx(const complex arg, const complex base)
 {
 	return logcx(arg) / logcx(base);
 }
 
 /* í—p‘Î” */
-complex log10cx(static complex arg)
+complex log10cx(const complex arg)
 {
 	return logcx(arg, complex(10,0));
 }
 
 /* w”ŠÖ” */
-complex expcx(static complex arg)
+complex expcx(const complex arg)
 {
 	// exp (x + iy) = exp x(cos y + i sin y) = exp x cos y + i exp x sin y
 	return complex(
@@ -150,7 +172,7 @@ complex expcx(static complex arg)
 }
 
 /* ™pæ */
-complex powcx(static complex arg, static complex exponent)
+complex powcx(const complex arg, const complex exponent)
 {
 	// Œë·‚ğ‹É—Í—}‚¦‚é‚½‚ß‚Éê‡•ª‚¯
 	// a ^ z = e ^ (z ln a)
@@ -185,7 +207,7 @@ complex powcx(static complex arg, static complex exponent)
 }
 
 /* •½•ûª */
-complex sqrtcx(static complex arg)
+complex sqrtcx(const complex arg)
 {
 	return powcx(arg, complex(0.5, 0));
 }
@@ -193,7 +215,7 @@ complex sqrtcx(static complex arg)
 
 
 /* ³Œ· */
-complex sincx(static complex arg)
+complex sincx(const complex arg)
 {
 	// sin (x + iy) = sin x cosh y + i cos x sinh y
 	return complex(
@@ -203,7 +225,7 @@ complex sincx(static complex arg)
 }
 
 /* —]Œ· */
-complex coscx(static complex arg)
+complex coscx(const complex arg)
 {
 	// cos (x + iy) = cos x cosh y + i sin x sinh y
 	return complex(
@@ -213,7 +235,7 @@ complex coscx(static complex arg)
 }
 
 /* ³Ú */
-complex tancx(static complex arg)
+complex tancx(const complex arg)
 {
 	// tan x = sin x / cos x
 	if (arg.Imaginary)
@@ -223,44 +245,44 @@ complex tancx(static complex arg)
 }
 
 /* ‹t³Œ· */
-complex asincx(static complex arg)
+complex asincx(const complex arg)
 {
 	// arcsin z = -i log (iz + sqrt(1 - z ^ 2))
-	return -I * logcx(I * arg + sqrtcx(1 - arg * arg));
+	return -I * logcx(I * arg + sqrtcx((complex)1 - arg * arg));
 }
 
 /* ‹t—]Œ· */
-complex acoscx(static complex arg)
+complex acoscx(const complex arg)
 {
 	// arccos z = -i log (z + sqrt(z ^ 2 - 1))
-	return -I * logcx(arg + sqrtcx(arg * arg - 1));
+	return -I * logcx(arg + sqrtcx(arg * arg - (complex)1));
 }
 
 /* ‹t³Ú */
-complex atancx(static complex arg)
+complex atancx(const complex arg)
 {
 	// arctan z = 0.5i log ((1 - iz) / (1 + iz))
-	return -0.5 * I * logcx((1 - I * arg) / (1 + I * arg));
+	return (complex)-0.5 * I * logcx(((complex)1 - I * arg) / ((complex)1 + I * arg));
 }
 
 
 
 /* ‘o‹Èü³Œ· */
-complex sinhcx(static complex arg)
+complex sinhcx(const complex arg)
 {
 	// sinh x = (e ^ x - e ^ (-x)) / 2
-	return (expcx(arg) - expcx(-arg)) / 2;
+	return (expcx(arg) - expcx(-arg)) / (complex)2;
 }
 
 /* ‘o‹Èü—]Œ· */
-complex coshcx(static complex arg)
+complex coshcx(const complex arg)
 {
 	// cosh x = (e ^ x + e ^ (-x)) / 2
-	return (expcx(arg) + expcx(-arg)) / 2;
+	return (expcx(arg) + expcx(-arg)) / (complex)2;
 }
 
 /* ‘o‹Èü³Ú */
-complex tanhcx(static complex arg)
+complex tanhcx(const complex arg)
 {
 	// tanh ƒÆ = sinh ƒÆ / cosh ƒÆ
 	if (arg.Imaginary)
@@ -270,22 +292,22 @@ complex tanhcx(static complex arg)
 }
 
 /* ‘o‹Èü‹t³Œ· */
-complex asinhcx(static complex arg)
+complex asinhcx(const complex arg)
 {
 	// arsinh x = ln (x + sqrt(x ^ 2 + 1))
-	return logcx(arg + sqrtcx(arg * arg + 1));
+	return logcx(arg + sqrtcx(arg * arg + (complex)1));
 }
 
 /* ‘o‹Èü‹t—]Œ· */
-complex acoshcx(static complex arg)
+complex acoshcx(const complex arg)
 {
 	// arsinh x = ln (x + sqrt(x ^ 2 - 1)); x>= 1
-	return logcx(arg + sqrtcx(arg * arg - 1));
+	return logcx(arg + sqrtcx(arg * arg - (complex)1));
 }
 
 /* ‘o‹Èü‹t³Ú */
-complex atanhcx(static complex arg)
+complex atanhcx(const complex arg)
 {
 	// arctanh x = 0.5 ln ((1 + x) / (1 - x)); |x| < 1
-	return 0.5 * logcx((1 + arg) / (1 - arg));
+	return (complex)0.5 * logcx(((complex)1 + arg) / ((complex)1 - arg));
 }

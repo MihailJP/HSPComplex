@@ -8,46 +8,48 @@ struct complex
 
 	complex(double real, double imaginary): Real(real), Imaginary(imaginary) {};
 	complex(double real): Real(real), Imaginary(0.0) {};
+	complex(int real): Real((double)real), Imaginary(0.0) {};
 	complex(): Real(0.0), Imaginary(0.0) {};
-	complex operator+();
-	complex operator-();
+	complex operator+() const;
+	complex operator-() const;
 	complex operator=(complex &val);
-	complex operator+(complex &val);
-	complex operator-(complex &val);
-	complex operator*(complex &val);
-	complex operator/(complex &val);
+	complex operator+(const complex &val) const;
+	complex operator-(const complex &val) const;
+	complex operator*(const complex &val) const;
+	complex operator/(const complex &val) const;
 	complex operator+=(complex &val);
 	complex operator-=(complex &val);
 	complex operator*=(complex &val);
 	complex operator/=(complex &val);
-	int operator==(complex &val);
-	int operator!=(complex &val);
+	bool operator==(complex &val);
+	bool operator!=(complex &val);
 	operator double();
+	operator char*();
 };
 
-complex polar(static double modulus, static double argument);
-double abscx(static complex arg);
-double argcx(static complex arg);
-complex conjg(static complex arg);
-complex logcx(static complex arg);
-complex logcx(static complex arg, static complex base);
-complex log10cx(static complex arg);
-complex expcx(static complex arg);
-complex powcx(static complex arg, static complex exponent);
-complex sqrtcx(static complex arg);
+complex polar(const double modulus, const double argument);
+double abscx(const complex arg);
+double argcx(const complex arg);
+complex conjg(const complex arg);
+complex logcx(const complex arg);
+complex logcx(const complex arg, const complex base);
+complex log10cx(const complex arg);
+complex expcx(const complex arg);
+complex powcx(const complex arg, const complex exponent);
+complex sqrtcx(const complex arg);
 
-complex sincx(static complex arg);
-complex coscx(static complex arg);
-complex tancx(static complex arg);
-complex asincx(static complex arg);
-complex acoscx(static complex arg);
-complex atancx(static complex arg);
+complex sincx(const complex arg);
+complex coscx(const complex arg);
+complex tancx(const complex arg);
+complex asincx(const complex arg);
+complex acoscx(const complex arg);
+complex atancx(const complex arg);
 
-complex sinhcx(static complex arg);
-complex coshcx(static complex arg);
-complex tanhcx(static complex arg);
-complex asinhcx(static complex arg);
-complex acoshcx(static complex arg);
-complex atanhcx(static complex arg);
+complex sinhcx(const complex arg);
+complex coshcx(const complex arg);
+complex tanhcx(const complex arg);
+complex asinhcx(const complex arg);
+complex acoshcx(const complex arg);
+complex atanhcx(const complex arg);
 
 #endif

@@ -56,24 +56,10 @@ static void *HspVarComplex_CnvCustom(const void *buffer, int flag)
 		else throw HSPVAR_ERROR_ILLEGALPRM; // 虚部が0でない場合はエラー
 		break;
 	case HSPVAR_FLAG_DOUBLE:
-		if (p.Imaginary == 0) *(double *)custom = (double)p.Real;
-		else *(long long *)custom = 0x7fffffffffffffff; // これでNaNになるはず……
+		*(double *)custom = (double)p;
 		break;
 	case HSPVAR_FLAG_STR:
-		if (p.Real) sprintf(realstr, "%g", p.Real);
-		if (p.Imaginary) {
-			memset(imagstr_tmp, 0, sizeof(imagstr_tmp)); //作業用バッファを初期化して0で埋める
-			sprintf(imagstr_tmp, "%g", p.Imaginary);
-			mantlen = (int)strcspn(imagstr_tmp, "e");
-			imagstr_tmp[mantlen] = (char)0; // eがあったらそこで分割
-			char* imagstr_exp = imagstr_tmp + mantlen + 1; //指数部へのポインタ
-			if((p.Real != 0)&&(p.Imaginary > 0)) strcat(imagstr, "+"); // 混虚数で虚部がプラスなら符号をつける
-			strcat(imagstr, imagstr_tmp); strcat(imagstr, "i");
-			if (*imagstr_exp != '\0') { // 虚部が指数表記だったら
-				strcat(imagstr, "e"); strcat(imagstr, imagstr_exp);
-			}
-		}
-		strcat(custom, realstr); strcat(custom, imagstr);
+		*(char *)custom = (char)p;
 		break;
 	default:
 		throw HSPVAR_ERROR_TYPEMISS;
