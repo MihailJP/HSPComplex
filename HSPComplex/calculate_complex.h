@@ -7,7 +7,10 @@ struct complex
 	double Imaginary;
 
 	complex(double real, double imaginary): Real(real), Imaginary(imaginary) {};
+	complex(double real): Real(real), Imaginary(0.0) {};
 	complex(): Real(0.0), Imaginary(0.0) {};
+	complex operator+();
+	complex operator-();
 	complex operator=(complex &val);
 	complex operator+(complex &val);
 	complex operator-(complex &val);
@@ -19,6 +22,7 @@ struct complex
 	complex operator/=(complex &val);
 	int operator==(complex &val);
 	int operator!=(complex &val);
+	operator double();
 };
 
 complex polar(static double modulus, static double argument);
@@ -31,5 +35,12 @@ complex log10cx(static complex arg);
 complex expcx(static complex arg);
 complex powcx(static complex arg, static complex exponent);
 complex sqrtcx(static complex arg);
+
+complex sincx(static complex arg);
+complex coscx(static complex arg);
+complex tancx(static complex arg);
+complex asincx(static complex arg);
+complex acoscx(static complex arg);
+complex atancx(static complex arg);
 
 #endif

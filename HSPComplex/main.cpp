@@ -82,21 +82,21 @@ static void *reffunc( int *type_res, int cmd )
 		break;
 
 	case 0x11:								// log10cxŠÖ”
-		// •¡‘f©‘R‘Î”ŠÖ”
+		// •¡‘fí—p‘Î”ŠÖ”
 		cp1 = excomplex();
 		ref_cval = log10cx(cp1);
 		answerType = 1;
 		break;
 
 	case 0x14:								// expcxŠÖ”
-		// •¡‘f©‘R‘Î”ŠÖ”
+		// •¡‘fw”ŠÖ”
 		cp1 = excomplex();
 		ref_cval = expcx(cp1);
 		answerType = 1;
 		break;
 
 	case 0x15:								// powcxŠÖ”
-		// •¡‘f©‘R‘Î”ŠÖ”
+		// •¡‘f™pŠÖ”
 		cp1 = excomplex();
 		cp2 = excomplex();
 		ref_cval = powcx(cp1, cp2);
@@ -104,9 +104,51 @@ static void *reffunc( int *type_res, int cmd )
 		break;
 
 	case 0x16:								// sqrtcxŠÖ”
-		// •¡‘f©‘R‘Î”ŠÖ”
+		// •¡‘f•½•ûªŠÖ”
 		cp1 = excomplex();
 		ref_cval = sqrtcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x20:								// sincxŠÖ”
+		// ³Œ·
+		cp1 = excomplex();
+		ref_cval = sincx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x21:								// coscxŠÖ”
+		// —]Œ·
+		cp1 = excomplex();
+		ref_cval = coscx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x22:								// tancxŠÖ”
+		// ³Ú
+		cp1 = excomplex();
+		ref_cval = tancx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x28:								// asincxŠÖ”
+		// ‹t³Œ·
+		cp1 = excomplex();
+		ref_cval = asincx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x29:								// acoscxŠÖ”
+		// ‹t—]Œ·
+		cp1 = excomplex();
+		ref_cval = acoscx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x2A:								// atancxŠÖ”
+		// ‹t³Ú
+		cp1 = excomplex();
+		ref_cval = atancx(cp1);
 		answerType = 1;
 		break;
 

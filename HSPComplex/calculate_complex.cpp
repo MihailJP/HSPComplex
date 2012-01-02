@@ -2,6 +2,9 @@
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
 
+/* NaNを返したいのにVC++だとそういう関数定義されてないってどういうことですかー */
+const double NaN = ::sqrt(-1.0);
+
 /* 演算子オーバーロード */
 
 #define A (Real)
@@ -52,6 +55,12 @@ complex complex::operator/=(complex &val) {
 		(B * C - A * D) / (C * C + D * D)
 	);
 }
+complex complex::operator+() {
+	return complex(A, B);
+}
+complex complex::operator-() {
+	return complex(-A, -B);
+}
 int complex::operator==(complex &val) {
 	return ( (A==C)&&(B==D) );
 }
@@ -64,10 +73,18 @@ int complex::operator!=(complex &val) {
 #undef C
 #undef D
 
+/* キャスト演算子のオーバーロード */
+complex::operator double() {
+	if (Imaginary) return NaN;
+	else return Real;
+}
+
 
 
 
 /* 関数 */
+
+#define I (complex(0,1))
 
 /* 極形式を直交形式にする */
 complex polar(static double modulus, static double argument)
@@ -98,6 +115,8 @@ complex conjg(static complex arg)
 		-arg.Imaginary
 		);
 }
+
+
 
 /* 自然対数 */
 complex logcx(static complex arg)
@@ -169,4 +188,57 @@ complex powcx(static complex arg, static complex exponent)
 complex sqrtcx(static complex arg)
 {
 	return powcx(arg, complex(0.5, 0));
+}
+
+
+
+/* 正弦 */
+complex sincx(static complex arg)
+{
+	// sin (x + iy) = sin x cosh y + i cos x sinh y
+	return complex(
+		sin(arg.Real) * cosh(arg.Imaginary),
+		cos(arg.Real) * sinh(arg.Imaginary)
+		);
+}
+
+/* 余弦 */
+complex coscx(static complex arg)
+{
+	// cos (x + iy) = cos x cosh y + i sin x sinh y
+	return complex(
+		cos(arg.Real) * cosh(arg.Imaginary),
+		sin(arg.Real) * sinh(arg.Imaginary)
+		);
+}
+
+/* 正接 */
+complex tancx(static complex arg)
+{
+	// tan x = sin x / cos x
+	if (arg.Imaginary)
+		return sincx(arg) / coscx(arg);
+	else /* 実数の時は普通のライブラリ関数を使う */
+		return complex(tan(arg.Real), 0);
+}
+
+/* 逆正弦 */
+complex asincx(static complex arg)
+{
+	// arcsin z = -i log (iz + sqrt(1 - z ^ 2))
+	return -I * logcx(I * arg + sqrtcx(1 - arg * arg));
+}
+
+/* 逆余弦 */
+complex acoscx(static complex arg)
+{
+	// arccos z = -i log (z + sqrt(z ^ 2 - 1))
+	return -I * logcx(arg + sqrtcx(arg * arg - 1));
+}
+
+/* 逆正接 */
+complex atancx(static complex arg)
+{
+	// arctan z = 0.5i log ((1 - iz) / (1 + iz))
+	return -0.5 * I * logcx((1 - I * arg) / (1 + I * arg));
 }
