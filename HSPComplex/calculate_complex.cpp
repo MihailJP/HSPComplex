@@ -171,10 +171,10 @@ complex sincx(const complex arg)
 /* —]Œ· */
 complex coscx(const complex arg)
 {
-	// cos (x + iy) = cos x cosh y + i sin x sinh y
+	// cos (x + iy) = cos x cosh y - i sin x sinh y
 	return cmplx(
 		cos(arg.Real) * cosh(arg.Imaginary),
-		sin(arg.Real) * sinh(arg.Imaginary)
+		-sin(arg.Real) * sinh(arg.Imaginary)
 		);
 }
 
