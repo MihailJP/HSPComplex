@@ -6,10 +6,10 @@
 HSPComplex
 
 %ver
-0.1
+0.2
 
 %date
-2012/01/02
+2012/01/07
 
 %author
 MihailJP
