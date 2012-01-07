@@ -4,6 +4,8 @@
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
 
+#define PI (atan2(1.0,1.0)*4.0)
+
 /* NaNÇï‘ÇµÇΩÇ¢ÇÃÇ…VC++ÇæÇ∆ÇªÇ§Ç¢Ç§ä÷êîíËã`Ç≥ÇÍÇƒÇ»Ç¢Ç¡ÇƒÇ«Ç§Ç¢Ç§Ç±Ç∆Ç≈Ç∑Ç©Å[ */
 const double NaN = ::sqrt(-1.0);
 
@@ -201,9 +203,8 @@ complex asincx(const complex arg)
 /* ãtó]å∑ */
 complex acoscx(const complex arg)
 {
-	// arccos z = -i log (z + sqrt(z ^ 2 - 1))
-	// [PN] *(-i, log(+(z, sqrt(-(*(z, z), 1)))))
-	return cxmul(cmplx(0,-1), logcx(cxadd(arg, sqrtcx(cxsub(cxmul(arg, arg), cmplx(1,0))))));
+	// arccos z = pi / 2 - arcsin(z)
+	return cxsub(cmplx(PI / 2.0, 0), asincx(arg));
 }
 
 /* ãtê≥ê⁄ */
