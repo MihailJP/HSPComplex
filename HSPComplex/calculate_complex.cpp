@@ -256,8 +256,8 @@ complex asinhcx(const complex arg)
 /* ëoã»ê¸ãtó]å∑ */
 complex acoshcx(const complex arg)
 {
-	// arsinh x = ln (x + sqrt(x ^ 2 - 1)); x>= 1
-	return logcx(cxadd(arg, sqrtcx(cxsub(cxmul(arg, arg), cmplx(1,0)))));
+	// arcosh x = ln (x + sqrt(x + 1) * sqrt(x - 1))
+	return logcx(cxadd(arg, cxmul(sqrtcx(cxadd(arg, cmplx(1,0))), sqrtcx(cxsub(arg, cmplx(1,0))))));
 }
 
 /* ëoã»ê¸ãtê≥ê⁄ */
