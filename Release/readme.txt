@@ -7,11 +7,12 @@
 
 【インストールのしかた】
 　アーカイブの中の、「HSPComplex.dll」をHSPの実行ファイルと同じフォルダーに、
-「hspcmplx.as」を common フォルダーに、「hspcmplx.hs」を hsphelp フォルダーに、
-それぞれコピーしてください。
+「common」「hsphelp」「sample」をそれぞれ対応するフォルダーに、それぞれコピー
+してください。
 
 【アンインストールのしかた】
-　「HSPComplex.dll」「hspcmplx.as」「hspcmplx.hs」を削除します。
+　「HSPComplex.dll」「common\hspcmplx.as」「hsphelp\hspcmplx.hs」
+「sample\HSPComplex」を削除します。
 
 【つかいかた】
 　スクリプトの頭に、「#include "hspcmplx.as"」という行を書くことで使用できるよ
@@ -51,29 +52,33 @@
 　HSPドキュメントライブラリ用のhsファイルをインストールし、そちらを参照してく
 ださい。搭載している関数は次の通りです。
 
-	abscx	複素数の絶対値を返す
-	acoscx	複素数の逆余弦を返す
-	acoshcx	複素数の双曲線逆余弦を返す
-	argcx	複素数の偏角を返す
-	asincx	複素数の逆正弦を返す
-	asinhcx	複素数の双曲線逆正弦を返す
-	atancx	複素数の逆正接を返す
-	atanhcx	複素数の双曲線逆正接を返す
+	cabs	複素数の絶対値を返す
+	cacos	複素数の逆余弦を返す
+	cacosh	複素数の双曲線逆余弦を返す
+	carg	複素数の偏角を返す
+	casin	複素数の逆正弦を返す
+	casinh	複素数の双曲線逆正弦を返す
+	catan	複素数の逆正接を返す
+	catanh	複素数の双曲線逆正接を返す
+	ccos	複素数の余弦を返す
+	ccosh	複素数の双曲線余弦を返す
+	cexp	複素数の指数を返す
+	cgamma	ガンマ関数の値を返す
+	cimag	複素数の虚部を返す
+	clog	複素数の自然対数を返す
+	clog10	複素数の常用対数を返す
 	complex	複素数を代入する、複素数に変換する
-	coscx	複素数の余弦を返す
-	coshcx	複素数の双曲線余弦を返す
-	expcx	複素数の指数を返す
-	imagcx	複素数の虚部を返す
-	log10cx	複素数の常用対数を返す
-	logcx	複素数の自然対数を返す
+	conj	共役複素数を返す
+	cpow	複素数の冪乗を求める
+	cproj	リーマン球面上への投射を返す
+	creal	複素数の実部を返す
+	csin	複素数の正弦を返す
+	csinh	複素数の双曲線正弦を返す
+	csqrt	複素数の平方根を返す
+	ctan	複素数の正接を返す
+	ctanh	複素数の双曲線正接を返す
 	polar	極形式で複素数に変換する
-	powcx	複素数の冪乗を求める
-	realcx	複素数の実部を返す
-	sincx	複素数の正弦を返す
-	sinhcx	複素数の双曲線正弦を返す
-	sqrtcx	複素数の平方根を返す
-	tancx	複素数の正接を返す
-	tanhcx	複素数の双曲線正接を返す
+
 
 【ライセンスについて】
 　このソフトウェアはどなたでも無償でご使用いただけますが、著作権を放棄するもの
@@ -90,6 +95,12 @@
 ・Twitter： @MihailJP
 
 【バージョン履歴】
+[0.3] 2012年1月21日
+　関数名をC99のcomplex.hと同様のものに変更、cprojとcgammaを追加。
+　サンプルスクリプトを追加した。
+　arcoshの計算結果が正しくないのを直す。
+　0除算でエラーにせず続行させるように変更。
+
 [0.2] 2012年1月7日
 　コサインとアークコサインの計算結果が正しくないのを直す。
 
