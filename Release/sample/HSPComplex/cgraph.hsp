@@ -1,0 +1,141 @@
+#include "hspcmplx.as"
+#include "hspdef.as"
+
+
+Gamma=0.6 ;ガンマ調整
+screen 0,671,551 ;画面を初期化する
+font msgothic, 12
+
+; 枠を描く
+color 192,192,192
+boxf 0, 0, 551, 551
+for x,25,526,50
+	color 0, 0, 0
+	if x = 275: line x, 546, x, 5
+	line x, 536, x, 15
+	tx = x-6: ty = 538: tstr = strf("%+2d", (x-25)/50-5): gosub *borderedtxt
+	tx = x-6: ty = 3: tstr = strf("%+2d", (x-25)/50-5): gosub *borderedtxt
+next
+for y,25,526,50
+	color 0, 0, 0
+	if y = 275: line 546, y, 5, y
+	line 536, y, 15, y
+	tx = 530: ty = y-6: tstr = strf("%+2di", 5-(y-25)/50): gosub *borderedtxt
+	tx = 3: ty = y-6: tstr = strf("%+2di", 5-(y-25)/50): gosub *borderedtxt
+next
+
+; ボタンを描画
+objsize 60,25: pos 551, 0
+button "sin(z)", *drawgraph
+button "cos(z)", *drawgraph
+button "tan(z)", *drawgraph
+button "cot(z)", *drawgraph
+button "sec(z)", *drawgraph
+button "csc(z)", *drawgraph
+button "asin(z)", *drawgraph
+button "acos(z)", *drawgraph
+button "atan(z)", *drawgraph
+button "acot(z)", *drawgraph
+button "asec(z)", *drawgraph
+button "acsc(z)", *drawgraph
+button "sinh(z)", *drawgraph
+button "cosh(z)", *drawgraph
+button "tanh(z)", *drawgraph
+button "coth(z)", *drawgraph
+button "sech(z)", *drawgraph
+button "csch(z)", *drawgraph
+button "asinh(z)", *drawgraph
+button "acosh(z)", *drawgraph
+button "atanh(z)", *drawgraph
+button "acoth(z)", *drawgraph
+pos 611, 0
+button "asech(z)", *drawgraph
+button "acsch(z)", *drawgraph
+button "log(z)", *drawgraph
+button "exp(z)", *drawgraph
+button "sqrt(z)", *drawgraph
+button "z^2+1", *drawgraph
+button "z^2-2z+1", *drawgraph
+button "z^3+1", *drawgraph
+button "sin^2(z)", *drawgraph
+button "sin^3(z)", *drawgraph
+button "sinc(z)", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+button "z", *drawgraph
+stop
+
+*drawgraph
+func = stat ;ボタンごとに分岐
+redraw 0 ;途中の描画は省略する
+for Im,250,-251,-1 ;虚軸ループ
+	for Re,-250,251,1 ;実軸ループ
+		argval=complex(double(Re)/50.0, double(Im)/50.0)
+		switch func
+			case 0: ans=csin(argval): swbreak
+			case 1: ans=ccos(argval): swbreak
+			case 2: ans=ctan(argval): swbreak
+			case 3: ans=complex(1)/ctan(argval): swbreak
+			case 4: ans=complex(1)/ccos(argval): swbreak
+			case 5: ans=complex(1)/csin(argval): swbreak
+			case 6: ans=casin(argval): swbreak
+			case 7: ans=cacos(argval): swbreak
+			case 8: ans=catan(argval): swbreak
+			case 9: ans=catan(complex(1)/argval): swbreak
+			case 10: ans=cacos(complex(1)/argval): swbreak
+			case 11: ans=casin(complex(1)/argval): swbreak
+			case 12: ans=csinh(argval): swbreak
+			case 13: ans=ccosh(argval): swbreak
+			case 14: ans=ctanh(argval): swbreak
+			case 15: ans=complex(1)/ctanh(argval): swbreak
+			case 16: ans=complex(1)/ccosh(argval): swbreak
+			case 17: ans=complex(1)/csinh(argval): swbreak
+			case 18: ans=casinh(argval): swbreak
+			case 19: ans=cacosh(argval): swbreak
+			case 20: ans=catanh(argval): swbreak
+			case 21: ans=catanh(complex(1)/argval): swbreak
+			case 22: ans=cacosh(complex(1)/argval): swbreak
+			case 23: ans=casinh(complex(1)/argval): swbreak
+			case 24: ans=clog(argval): swbreak
+			case 25: ans=cexp(argval): swbreak
+			case 26: ans=csqrt(argval): swbreak
+			case 27: ans=argval*argval+1: swbreak
+			case 28: ans=argval*argval-argval*2+1: swbreak
+			case 29: ans=argval*argval*argval+1: swbreak
+			case 30: ans=csin(argval)*csin(argval): swbreak
+			case 31: ans=csin(argval)*csin(argval)*csin(argval): swbreak
+			case 32: ans=csin(argval*M_PI)/(argval*M_PI): swbreak
+			default: ans=argval: swbreak
+		swend
+		H=int(carg(ans)*96.0/M_PI) ;偏角を色相に直す
+		while H<0: H+=192: wend
+		while H>=192: H-=192: wend
+		T=catan(cpow(complex(cabs(ans),0),complex(Gamma,0))) ;arctanで変換
+		S=int(cabs(csin(T*complex(2.0,0)))*255.0) ;絶対値を彩度に変換
+		V=int(cabs(T)*1020.0/M_PI) ;絶対値を明度に変換
+		if V>255: V=255
+		hsvcolor H,S,V ;色を指定
+		pset Re+250+25,250-Im+25 ;点を打つ
+	next
+next
+redraw 1
+stop
+
+; 縁取り文字
+*borderedtxt
+	color 0,0,0
+	pos tx-1, ty: print tstr
+	pos tx, ty-1: print tstr
+	pos tx+1, ty: print tstr
+	pos tx, ty+1: print tstr
+	color 255,255,255
+	pos tx, ty: print tstr
+	return
