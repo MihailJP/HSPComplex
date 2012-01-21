@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <float.h>
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
 
@@ -264,4 +265,83 @@ complex atanhcx(const complex arg)
 {
 	// arctanh x = 0.5 ln ((1 + x) / (1 - x)); |x| < 1
 	return cxmul(cmplx(0.5,0), logcx(cxdiv(cxadd(cmplx(1,0), arg), cxsub(cmplx(1,0), arg))));
+}
+
+/* Ver0.3’Ç‰Á */
+/* C99‚Ìcproj‚İ‚½‚¢‚È‚à‚Ì */
+complex projection(const complex arg)
+{
+	if ((!_finite(arg.Real))&&(!_isnan(arg.Real))&&(!_finite(arg.Imaginary))&&(!_isnan(arg.Imaginary)))
+	{
+		return cmplx(DBL_MAX*1000, 0);
+	}
+	else {
+		return arg;
+	}
+}
+
+/* Ver0.3’Ç‰Á */
+/* ƒKƒ“ƒ}ŠÖ” */
+complex gamma(const complex arg)
+{
+	int k; double x;
+	complex AnsRaw, Previous; bool endflag;
+	if ((arg.Imaginary == 0)&&(arg.Real == floor(arg.Real))) {
+		/* ®”‚Ìê‡ */
+		if (arg.Real >= 170) {
+			return cmplx(DBL_MAX*1000, 0); /* Overflow if >= 170 */
+		} else if (arg.Real > 0) {
+			/* ˆø”‚ª³‚Ì */
+			x = 1.0;
+			for (k = 1; k < arg.Real; k++) x *= (double)k;
+			return cmplx(x, 0);
+		} else if ((int)floor(arg.Real) % 2) {
+			/* ˆø”‚ª•‰‚ÅŠï”‚Ì */
+			return cmplx(-DBL_MAX*1000, 0);
+		} else {
+			/* ˆø”‚ª•‰‚Å‹ô”‚Ì */
+			return cmplx(DBL_MAX*1000, 0);
+		}
+	} else if ((arg.Imaginary == 0)&&((arg.Real+0.5) == floor(arg.Real+0.5))) {
+		/* ”¼®”‚Ìê‡ */
+		if ((arg.Real > 0)&&(arg.Real < 1)) {
+			return cmplx(sqrt(atan2(1.0,1.0)*4), 0); /* ƒ¡(0.5) = ãƒÎ */
+		} else if (arg.Real >= 170) {
+			return cmplx(DBL_MAX*1000, 0); /* Overflow if >= 170 */
+		} else if (arg.Real > 1) {
+			/* ˆø”‚ª³‚Ì */
+			x = sqrt(atan2(1.0,1.0)*4);
+			for (k = 1; k < arg.Real; k++) x *= ((double)k * 2.0 - 1.0) / 2.0;
+			return cmplx(x, 0);
+		} else if ((int)floor(arg.Real) % 2) {
+			return cmplx(-DBL_MAX*1000, 0);
+		} else if (arg.Real <= -179) {
+			return cmplx(0, 0); /* Underflow if <= -179 */
+		} else {
+			/* ˆø”‚ª•‰‚Ì */
+			x = sqrt(atan2(1.0,1.0)*4);
+			for (k = 1; k < arg.Real; k++) x *= -2.0 / ((double)k * 2.0 - 1.0);
+			return cmplx(x, 0);
+		}
+	} else {
+		/* ˆê”Ê‰ğ */
+		AnsRaw = cmplx(1, 0); Previous = cmplx(1, 0);
+		endflag = false; k = 1;
+		while (!endflag) {
+			Previous = AnsRaw;
+			AnsRaw = cxmul(AnsRaw, cxdiv(
+				powcx(cmplx(1.0 + 1.0 / k, 0), arg),
+				cxadd(cmplx(1, 0), cxdiv(arg, cmplx(k, 0)))
+				));
+			if ((!_finite(AnsRaw.Real)) || (!_finite(AnsRaw.Imaginary))
+				|| (abscx(cxsub(AnsRaw, Previous)) < DBL_EPSILON)
+				|| (k > 200000) )
+			{
+				AnsRaw = Previous;
+				endflag = true;
+			}
+			k++;
+		}
+		return cxdiv(AnsRaw, arg);
+	}
 }

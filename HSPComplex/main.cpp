@@ -45,28 +45,28 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;						// •Ô‚è’l‚Í•¡‘f”
 		break;
 
-	case 0x01:								// abscxŠÖ”
+	case 0x01:								// cabsŠÖ”
 		// r = sqrt(x^2 + y^2)
 		cp1 = excomplex();					// •¡‘f”’l‚ğæ“¾
 		ref_dval = abscx(cp1);
 		answerType = 0;						// •Ô‚è’l‚ÍÀ””
 		break;
 
-	case 0x02:								// argcxŠÖ”
+	case 0x02:								// cargŠÖ”
 		// theta = arctan(y / x)
 		cp1 = excomplex();
 		ref_dval = argcx(cp1);
 		answerType = 0;
 		break;
 
-	case 0x03:								// conjgŠÖ”
+	case 0x03:								// conjŠÖ”
 		// ‹¤–ğ•¡‘f”‚ğ•Ô‚·
 		cp1 = excomplex();
 		ref_cval = conjg(cp1);
 		answerType = 1;
 		break;
 
-	case 0x04:								// polarŠÖ”
+	case 0x04:								// cpolarŠÖ”
 		// ‹ÉŒ`®‚Å“ü—Í
 		dp1 = code_getdd(0.0);
 		dp2 = code_getdd(0.0);
@@ -74,42 +74,42 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
-	case 0x05:								// realcxŠÖ”
+	case 0x05:								// crealŠÖ”
 		// À•”
 		cp1 = excomplex();
 		ref_dval = cp1.Real;
 		answerType = 0;
 		break;
 
-	case 0x06:								// imagcxŠÖ”
+	case 0x06:								// cimagŠÖ”
 		// ‹••”
 		cp1 = excomplex();
 		ref_dval = cp1.Imaginary;
 		answerType = 0;
 		break;
 
-	case 0x10:								// logcxŠÖ”
+	case 0x10:								// clogŠÖ”
 		// •¡‘f©‘R‘Î”ŠÖ”
 		cp1 = excomplex();
 		ref_cval = logcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x11:								// log10cxŠÖ”
+	case 0x11:								// clog10ŠÖ”
 		// •¡‘fí—p‘Î”ŠÖ”
 		cp1 = excomplex();
 		ref_cval = log10cx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x14:								// expcxŠÖ”
+	case 0x14:								// cexpŠÖ”
 		// •¡‘fw”ŠÖ”
 		cp1 = excomplex();
 		ref_cval = expcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x15:								// powcxŠÖ”
+	case 0x15:								// cpowŠÖ”
 		// •¡‘f™pŠÖ”
 		cp1 = excomplex();
 		cp2 = excomplex();
@@ -117,94 +117,106 @@ static void *reffunc( int *type_res, int cmd )
 		answerType = 1;
 		break;
 
-	case 0x16:								// sqrtcxŠÖ”
+	case 0x16:								// csqrtŠÖ”
 		// •¡‘f•½•ûªŠÖ”
 		cp1 = excomplex();
 		ref_cval = sqrtcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x20:								// sincxŠÖ”
+	case 0x20:								// csinŠÖ”
 		// ³Œ·
 		cp1 = excomplex();
 		ref_cval = sincx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x21:								// coscxŠÖ”
+	case 0x21:								// ccosŠÖ”
 		// —]Œ·
 		cp1 = excomplex();
 		ref_cval = coscx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x22:								// tancxŠÖ”
+	case 0x22:								// ctanŠÖ”
 		// ³Ú
 		cp1 = excomplex();
 		ref_cval = tancx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x28:								// asincxŠÖ”
+	case 0x28:								// casinŠÖ”
 		// ‹t³Œ·
 		cp1 = excomplex();
 		ref_cval = asincx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x29:								// acoscxŠÖ”
+	case 0x29:								// cacosŠÖ”
 		// ‹t—]Œ·
 		cp1 = excomplex();
 		ref_cval = acoscx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x2A:								// atancxŠÖ”
+	case 0x2A:								// catanŠÖ”
 		// ‹t³Ú
 		cp1 = excomplex();
 		ref_cval = atancx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x30:								// sinhcxŠÖ”
+	case 0x30:								// csinhŠÖ”
 		// ‘o‹Èü³Œ·
 		cp1 = excomplex();
 		ref_cval = sinhcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x31:								// coshcxŠÖ”
+	case 0x31:								// ccoshŠÖ”
 		// ‘o‹Èü—]Œ·
 		cp1 = excomplex();
 		ref_cval = coshcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x32:								// tanhcxŠÖ”
+	case 0x32:								// ctanhŠÖ”
 		// ‘o‹Èü³Ú
 		cp1 = excomplex();
 		ref_cval = tanhcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x38:								// asinhcxŠÖ”
+	case 0x38:								// casinhŠÖ”
 		// ‘o‹Èü‹t³Œ·
 		cp1 = excomplex();
 		ref_cval = asinhcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x39:								// acoshcxŠÖ”
+	case 0x39:								// cacoshŠÖ”
 		// ‘o‹Èü‹t—]Œ·
 		cp1 = excomplex();
 		ref_cval = acoshcx(cp1);
 		answerType = 1;
 		break;
 
-	case 0x3A:								// atanhcxŠÖ”
+	case 0x3A:								// catanhŠÖ”
 		// ‘o‹Èü‹t³Ú
 		cp1 = excomplex();
 		ref_cval = atanhcx(cp1);
+		answerType = 1;
+		break;
+
+	case 0x40:								// cprojŠÖ”
+		cp1 = excomplex();
+		ref_cval = projection(cp1);
+		answerType = 1;
+		break;
+
+	case 0x41:								// cgammaŠÖ”
+		cp1 = excomplex();
+		ref_cval = gamma(cp1);
 		answerType = 1;
 		break;
 

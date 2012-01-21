@@ -39,4 +39,7 @@ complex asinhcx(const complex arg);
 complex acoshcx(const complex arg);
 complex atanhcx(const complex arg);
 
+complex projection(const complex arg);
+complex gamma(const complex arg);
+
 #endif
