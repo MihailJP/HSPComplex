@@ -172,8 +172,6 @@ static void HspVarComplex_MulI( PDAT *pval, const void *val )
 // Div
 static void HspVarComplex_DivI( PDAT *pval, const void *val )
 {
-	complex p = *((complex *)(val));
-	if ((p.Real==0)&&(p.Imaginary==0)) throw( HSPVAR_ERROR_DIVZERO ); // 0èúéZÇµÇΩÇÁÉGÉâÅ[
 	*((complex *)pval) = cxdiv(*((complex *)pval), *((complex *)val));
 	*aftertype = mytype;
 }
