@@ -25,6 +25,3 @@
 #cmd catanh 0x3a
 #cmd cproj 0x40
 #cmd cgamma 0x41
-
-print ""+complex(1.2, 0)
-print ""+cgamma(complex(1.2, 0))
