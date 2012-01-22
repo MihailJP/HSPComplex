@@ -1,14 +1,4 @@
-del /q HSPComplex\common\*
-rmdir HSPComplex\common
-del /q HSPComplex\hsphelp\*
-rmdir HSPComplex\hsphelp
-del /q HSPComplex\sample\*
-rmdir HSPComplex\sample
-del /q HSPComplex\sample\HSPComplex\*
-rmdir HSPComplex\sample\HSPComplex
-del /q HSPComplex\*
-del /q HSPComplex.zip
-rmdir HSPComplex
+rmdir /s /q HSPComplex
 
 mkdir HSPComplex
 mkdir HSPComplex\common
