@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
+#include <stdlib.h>
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
 
@@ -135,6 +136,8 @@ complex powcx(const complex arg, const complex exponent)
 			return cmplx(-pow(-arg.Real, exponent.Real), 0);
 		case 3: // 虚軸マイナス
 			return cmplx(0, -pow(-arg.Real, exponent.Real));
+		default: // 実行されないはずのコード
+			return *((complex *)NULL);
 		}
 	else if ((arg.Imaginary != 0)&&(arg.Real == 0)&&(exponent.Real == floor(exponent.Real))) /* 純虚数の整数乗 */
 		switch ((int)floor(exponent.Real) % 4) {
@@ -146,6 +149,8 @@ complex powcx(const complex arg, const complex exponent)
 			return cmplx(-pow(arg.Imaginary, exponent.Real), 0);
 		case 3: // 虚軸マイナス
 			return cmplx(0, -pow(arg.Imaginary, exponent.Real));
+		default: // 実行されないはずのコード
+			return *((complex *)NULL);
 		}
 	else if (argcx(arg) != 0) /* 底が正の実数でない場合 */
 		return polar(pow(abscx(arg), exponent.Real), argcx(arg) * exponent.Real);
