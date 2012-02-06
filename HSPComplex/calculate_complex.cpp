@@ -306,33 +306,21 @@ complex gamma(const complex arg)
 			/* 引数が負で偶数の時 */
 			return cmplx(DBL_MAX*1000, 0);
 		}
-	} else if ((arg.Imaginary == 0)&&((arg.Real+0.5) == floor(arg.Real+0.5))) {
-		/* 半整数の場合 */
-		if ((arg.Real > 0)&&(arg.Real < 1)) {
-			return cmplx(sqrt(atan2(1.0,1.0)*4), 0); /* Γ(0.5) = √π */
-		} else if (arg.Real >= 170) {
-			return cmplx(DBL_MAX*1000, 0); /* Overflow if >= 170 */
-		} else if (arg.Real > 1) {
-			/* 引数が正の時 */
-			x = sqrt(atan2(1.0,1.0)*4);
-			for (k = 1; k < arg.Real; k++) x *= ((double)k * 2.0 - 1.0) / 2.0;
-			return cmplx(x, 0);
-		} else if ((int)floor(arg.Real) % 2) {
-			return cmplx(-DBL_MAX*1000, 0);
-		} else if (arg.Real <= -179) {
-			return cmplx(0, 0); /* Underflow if <= -179 */
-		} else {
-			/* 引数が負の時 */
-			x = sqrt(atan2(1.0,1.0)*4);
-			for (k = 1; k < arg.Real; k++) x *= -2.0 / ((double)k * 2.0 - 1.0);
-			return cmplx(x, 0);
-		}
+	} else if (arg.Real < 0.5) {
+		/* 偏角が大きい場合 */
+		/* オイラーの反射公式により誤差を修正する */
+		/* Γ(z)Γ(1-z) = pi / sin(pi * z) */
+		/* Γ(z) = (pi / sin(pi * z)) / Γ(1-z) */
+		return cxdiv(
+			cxdiv(cmplx(M_PI,0),sincx(cxmul(cmplx(M_PI,0),arg))),
+			gamma(cxsub(cmplx(1,0),arg))
+			);
 	} else {
 		/* 一般解 */
 		/* スターリングの公式の応用を使う */
 		/* Γ(z) ≒ sqrt(2 * pi / z) * (z / e * sqrt(z * sinh(1 / z) + 1 / (810 * z^6)))^z */
 		return cxmul(
-			sqrtcx(cxdiv(cmplx(2 * M_PI,0), arg)),
+			sqrtcx(cxdiv(cmplx(2.0 * M_PI,0), arg)),
 			powcx(cxmul(
 				cxdiv(arg, cmplx(M_E, 0)),
 				sqrtcx(cxadd(
@@ -342,5 +330,6 @@ complex gamma(const complex arg)
 				),
 			arg)
 			);
+
 	}
 }
