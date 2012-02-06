@@ -1,11 +1,11 @@
+#define _USE_MATH_DEFINES
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
 #include <float.h>
 #include "hspvar_complex.h"
 #include "calculate_complex.h"
-
-#define PI (atan2(1.0,1.0)*4.0)
 
 /* NaNを返したいのにVC++だとそういう関数定義されてないってどういうことですかー */
 const double NaN = ::sqrt(-1.0);
@@ -205,7 +205,7 @@ complex asincx(const complex arg)
 complex acoscx(const complex arg)
 {
 	// arccos z = pi / 2 - arcsin(z)
-	return cxsub(cmplx(PI / 2.0, 0), asincx(arg));
+	return cxsub(cmplx(M_PI / 2.0, 0), asincx(arg));
 }
 
 /* 逆正接 */
@@ -285,7 +285,6 @@ complex projection(const complex arg)
 complex gamma(const complex arg)
 {
 	int k; double x;
-	complex AnsRaw, Previous; bool endflag;
 	if ((arg.Imaginary == 0)&&(arg.Real == floor(arg.Real))) {
 		/* 整数の場合 */
 		if (arg.Real >= 170) {
@@ -325,23 +324,18 @@ complex gamma(const complex arg)
 		}
 	} else {
 		/* 一般解 */
-		AnsRaw = cmplx(1, 0); Previous = cmplx(1, 0);
-		endflag = false; k = 1;
-		while (!endflag) {
-			Previous = AnsRaw;
-			AnsRaw = cxmul(AnsRaw, cxdiv(
-				powcx(cmplx(1.0 + 1.0 / k, 0), arg),
-				cxadd(cmplx(1, 0), cxdiv(arg, cmplx(k, 0)))
-				));
-			if ((!_finite(AnsRaw.Real)) || (!_finite(AnsRaw.Imaginary))
-				|| (abscx(cxsub(AnsRaw, Previous)) < DBL_EPSILON)
-				|| (k > 200000) )
-			{
-				AnsRaw = Previous;
-				endflag = true;
-			}
-			k++;
-		}
-		return cxdiv(AnsRaw, arg);
+		/* スターリングの公式の応用を使う */
+		/* Γ(z) ≒ sqrt(2 * pi / z) * (z / e * sqrt(z * sinh(1 / z) + 1 / (810 * z^6)))^z */
+		return cxmul(
+			sqrtcx(cxdiv(cmplx(2 * M_PI,0), arg)),
+			powcx(cxmul(
+				cxdiv(arg, cmplx(M_E, 0)),
+				sqrtcx(cxadd(
+					cxmul(arg, sinhcx(cxdiv(cmplx(1,0),arg))),
+					cxdiv(cmplx(1,0), cxmul(cmplx(810,0),powcx(arg,cmplx(6,0)))))
+					)
+				),
+			arg)
+			);
 	}
 }
