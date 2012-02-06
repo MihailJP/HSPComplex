@@ -60,7 +60,7 @@ button "z^3+1", *drawgraph
 button "sin^2(z)", *drawgraph
 button "sin^3(z)", *drawgraph
 button "sinc(z)", *drawgraph
-button "z", *drawgraph
+button "ƒ¡(z)", *drawgraph
 button "z", *drawgraph
 button "z", *drawgraph
 button "z", *drawgraph
@@ -113,6 +113,7 @@ for Im,250,-251,-1 ;‹•²ƒ‹[ƒv
 			case 30: ans=csin(argval)*csin(argval): swbreak
 			case 31: ans=csin(argval)*csin(argval)*csin(argval): swbreak
 			case 32: ans=csin(argval*M_PI)/(argval*M_PI): swbreak
+			case 33: ans=cgamma(argval): swbreak
 			default: ans=argval: swbreak
 		swend
 		H=int(carg(ans)*96.0/M_PI) ;•ÎŠp‚ğF‘Š‚É’¼‚·
